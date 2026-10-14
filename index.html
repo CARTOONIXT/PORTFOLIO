@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOHIT.EXE // VISUAL_ARCHITECT | Video Editor, Motion Designer & Creative Technologist</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#07070c',
+                        voidLight: '#0f101a',
+                        voidPanel: '#121320',
+                        cyberYellow: '#fcee0a',
+                        neonCyan: '#00f0ff',
+                        electricMagenta: '#ff003c',
+                        terminalGreen: '#00ff66',
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                        mono: ['Share Tech Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-void: #07070c;
+            --cyber-yellow: #fcee0a;
+            --neon-cyan: #00f0ff;
+            --electric-magenta: #ff003c;
+            --terminal-green: #00ff66;
+        }
+
+        * {
+            box-sizing: border-box;
+            selection-background-color: #fcee0a;
+            selection-color: #07070c;
+        }
+
+        ::selection {
+            background: #fcee0a;
+            color: #07070c;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 35%),
+                radial-gradient(circle at 85% 60%, rgba(255, 0, 60, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #07070c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00f0ff;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #fcee0a;
+        }
+
+        /* CRT Scanline Overlay */
+        .crt-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.32) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.02),
+                rgba(0, 255, 0, 0.01),
+                rgba(0, 0, 255, 0.02)
+            );
+            background-size: 100% 4px, 6px 100%;
+            opacity: 0.75;
+            transition: opacity 0.3s ease;
+        }
+        .crt-overlay.crt-off {
+            opacity: 0;
+        }
+
+        /* Cyberpunk Clip Paths */
+        .clip-angled {
+            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+        }
+        .clip-angled-sm {
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+        .clip-btn {
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+        .clip-card {
+            clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        }
+        .clip-tab {
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+
+        /* Neon Glows & Borders */
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.25), inset 0 0 15px rgba(0, 240, 255, 0.08);
+        }
+        .glow-yellow {
+            box-shadow: 0 0 18px rgba(252, 238, 10, 0.35), inset 0 0 12px rgba(252, 238, 10, 0.12);
+        }
+        .glow-magenta {
+            box-shadow: 0 0 18px rgba(255, 0, 60, 0.35), inset 0 0 12px rgba(255, 0, 60, 0.12);
+        }
+        .glow-green {
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+        }
+
+        /* Glitch Text Effect */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .glitch-text {
+            position: relative;
+            z-index: 1;
+        }
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff003c;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-1 3.5s infinite linear alternate-reverse;
+        }
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 #00f0ff;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim-2 2.8s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(12px, 9999px, 42px, 0); transform: skew(0.2deg); }
+            15% { clip: rect(65px, 9999px, 92px, 0); transform: skew(-0.4deg); }
+            30% { clip: rect(28px, 9999px, 16px, 0); transform: skew(0.1deg); }
+            45% { clip: rect(80px, 9999px, 98px, 0); transform: skew(-0.2deg); }
+            60% { clip: rect(8px, 9999px, 55px, 0); transform: skew(0.5deg); }
+            75% { clip: rect(45px, 9999px, 72px, 0); transform: skew(-0.1deg); }
+            90% { clip: rect(90px, 9999px, 105px, 0); transform: skew(0.3deg); }
+            100% { clip: rect(18px, 9999px, 60px, 0); transform: skew(0deg); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); transform: skew(-0.3deg); }
+            20% { clip: rect(10px, 9999px, 35px, 0); transform: skew(0.4deg); }
+            40% { clip: rect(50px, 9999px, 75px, 0); transform: skew(-0.1deg); }
+            60% { clip: rect(22px, 9999px, 64px, 0); transform: skew(0.2deg); }
+            80% { clip: rect(78px, 9999px, 95px, 0); transform: skew(-0.4deg); }
+            100% { clip: rect(5px, 9999px, 40px, 0); transform: skew(0deg); }
+        }
+
+        /* Halftone Pattern Overlay for Risograph / Collage Elements */
+        .halftone-bg {
+            background-image: radial-gradient(rgba(252, 238, 10, 0.22) 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+
+        /* HUD Corner Brackets */
+        .hud-corners {
+            position: relative;
+        }
+        .hud-corners::before,
+        .hud-corners::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-color: #00f0ff;
+            pointer-events: none;
+        }
+        .hud-corners::before {
+            top: 0;
+            left: 0;
+            border-top: 2px solid #00f0ff;
+            border-left: 2px solid #00f0ff;
+        }
+        .hud-corners::after {
+            bottom: 0;
+            right: 0;
+            border-bottom: 2px solid #fcee0a;
+            border-right: 2px solid #fcee0a;
+        }
+
+        /* Custom Range Input for Timelines */
+        input[type=range].cyber-range {
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(0, 240, 255, 0.15);
+            height: 6px;
+            border-radius: 2px;
+            outline: none;
+        }
+        input[type=range].cyber-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 22px;
+            background: #fcee0a;
+            cursor: pointer;
+            border: 2px solid #07070c;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+            box-shadow: 0 0 10px #fcee0a;
+        }
+
+        @keyframes pulse-fast {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.25; }
+        }
+        .animate-pulse-fast {
+            animation: pulse-fast 1.2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen selection:bg-cyberYellow selection:text-void">
+
+    <!-- CRT Scanline Overlay -->
+    <div id="crtOverlay" class="crt-overlay"></div>
+
+    <!-- Top Telemetry Strip -->
+    <div class="bg-voidLight border-b border-neonCyan/20 text-[11px] font-mono text-slate-400 py-1.5 px-4 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-4">
+                <span class="text-cyberYellow flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-terminalGreen animate-pulse-fast inline-block"></span>
+                    STATUS: AVAILABLE FOR FREELANCE & COMMERCIALS
+                </span>
+                <span class="hidden md:inline text-slate-600">|</span>
+                <span class="hidden md:inline text-neonCyan">LOC: 28.7041° N, 77.1025° E // DELHI_SECTOR</span>
+            </div>
+            <div class="flex items-center gap-4 ml-auto">
+                <span id="liveClock" class="text-slate-300">SYS_TIME: 00:00:00 IST</span>
+                <span class="text-slate-600">|</span>
+                <span class="text-terminalGreen"><span id="fpsCounter">60</span> FPS // NLE_SYNC</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main HUD Navigation Bar -->
+    <header class="sticky top-[29px] z-40 bg-void/90 backdrop-blur-lg border-b border-neonCyan/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+            <!-- Brand Logo -->
+            <a href="#system-bio" data-sfx="click" class="group flex items-center gap-3">
+                <div class="w-10 h-10 bg-cyberYellow text-void font-orbitron font-black flex items-center justify-center text-lg clip-angled-sm group-hover:bg-neonCyan transition-colors">
+                    M//
+                </div>
+                <div>
+                    <div class="font-orbitron font-bold text-sm sm:text-base tracking-wider text-white flex items-center gap-1.5">
+                        MOHIT<span class="text-cyberYellow">.EXE</span>
+                        <span class="text-[10px] font-mono px-1.5 py-0.5 bg-electricMagenta/20 border border-electricMagenta text-electricMagenta rounded">v4.2</span>
+                    </div>
+                    <div class="font-mono text-[10px] text-neonCyan tracking-widest">// VISUAL_ARCHITECT</div>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden xl:flex items-center gap-1 font-mono text-xs">
+                <a href="#system-bio" data-sfx="hover" class="px-3 py-2 text-slate-300 hover:text-cyberYellow hover:bg-white/5 rounded transition-all">[01_SYSTEM_BIO]</a>
+                <a href="#arsenal" data-sfx="hover" class="px-3 py-2 text-slate-300 hover:text-cyberYellow hover:bg-white/5 rounded transition-all">[02_ARSENAL]</a>
+                <a href="#project-archives" data-sfx="hover" class="px-3 py-2 text-slate-300 hover:text-cyberYellow hover:bg-white/5 rounded transition-all">[03_PROJECT_ARCHIVES]</a>
+                <a href="#showreel-deck" data-sfx="hover" class="px-3 py-2 text-slate-300 hover:text-cyberYellow hover:bg-white/5 rounded transition-all">[04_SHOWREEL_DECK]</a>
+                <a href="#datalogs" data-sfx="hover" class="px-3 py-2 text-slate-300 hover:text-cyberYellow hover:bg-white/5 rounded transition-all">[05_DATALOGS]</a>
+                <a href="#transmit" data-sfx="hover" class="px-3 py-2 text-cyberYellow border border-cyberYellow/50 bg-cyberYellow/10 hover:bg-cyberYellow hover:text-void font-bold rounded transition-all ml-1">[06_TRANSMIT]</a>
+            </nav>
+
+            <!-- HUD Utility Controls -->
+            <div class="flex items-center gap-2">
+                <!-- Audio SFX Toggle -->
+                <button id="audioToggleBtn" onclick="toggleAudioSFX()" class="px-2.5 py-1.5 font-mono text-xs border border-neonCyan/50 bg-neonCyan/10 text-neonCyan hover:bg-neonCyan hover:text-void transition-all rounded flex items-center gap-1.5" title="Toggle Synthesized Sci-Fi UI Audio">
+                    <i data-lucide="volume-2" id="audioIcon" class="w-3.5 h-3.5"></i>
+                    <span id="audioLabel" class="hidden sm:inline">SFX: ON</span>
+                </button>
+
+                <!-- CRT Scanline Toggle -->
+                <button id="crtToggleBtn" onclick="toggleCRT()" class="px-2.5 py-1.5 font-mono text-xs border border-cyberYellow/50 bg-cyberYellow/10 text-cyberYellow hover:bg-cyberYellow hover:text-void transition-all rounded flex items-center gap-1.5" title="Toggle CRT Scanlines">
+                    <i data-lucide="tv" class="w-3.5 h-3.5"></i>
+                    <span id="crtLabel" class="hidden sm:inline">CRT: ON</span>
+                </button>
+
+                <!-- Mobile Hamburger Button -->
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="xl:hidden p-2 border border-slate-700 text-neonCyan hover:border-neonCyan rounded">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobileNav" class="hidden xl:hidden bg-voidPanel border-t border-neonCyan/30 px-4 py-3 font-mono text-xs space-y-1.5">
+            <a href="#system-bio" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded hover:bg-white/5 text-slate-200">[01_SYSTEM_BIO]</a>
+            <a href="#arsenal" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded hover:bg-white/5 text-slate-200">[02_ARSENAL]</a>
+            <a href="#project-archives" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded hover:bg-white/5 text-slate-200">[03_PROJECT_ARCHIVES]</a>
+            <a href="#showreel-deck" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded hover:bg-white/5 text-slate-200">[04_SHOWREEL_DECK]</a>
+            <a href="#datalogs" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded hover:bg-white/5 text-slate-200">[05_DATALOGS]</a>
+            <a href="#transmit" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded bg-cyberYellow text-void font-bold text-center">[06_TRANSMIT_SIGNAL]</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 space-y-24 py-10 md:py-16">
+
+        <!-- ==========================================
+             01_SYSTEM_BIO // HERO SECTION
+             ========================================== -->
+        <section id="system-bio" class="scroll-mt-28">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left Column: Bio & Quick Stats -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-electricMagenta/15 border border-electricMagenta/50 text-electricMagenta font-mono text-xs rounded">
+                        <span class="w-2 h-2 bg-electricMagenta rounded-full animate-ping"></span>
+                        SYS_ID: MOHIT // DELHI_SECTOR // CREATIVE_TECHNOLOGIST
+                    </div>
+
+                    <div class="glitch-wrapper">
+                        <h1 class="font-orbitron font-black text-3xl sm:text-5xl xl:text-6xl leading-[1.08] tracking-tight text-white uppercase glitch-text" data-text="MOHIT // HIGH-IMPACT VIDEO EDITOR & MOTION DESIGNER">
+                            MOHIT // <span class="text-cyberYellow">HIGH-IMPACT</span> VIDEO EDITOR & <span class="text-neonCyan">MOTION DESIGNER</span>
+                        </h1>
+                    </div>
+
+                    <p class="text-slate-300 text-base sm:text-lg leading-relaxed border-l-4 border-cyberYellow pl-4 bg-white/[0.02] py-2 font-medium">
+                        Crafting kinetic short-form reels, commercial advertisements, AI-powered product animations, and tactile digital collage visuals. Bridging precision storytelling in <span class="text-neonCyan font-semibold">Adobe Premiere Pro & After Effects</span> with next-gen <span class="text-cyberYellow font-semibold">generative AI workflows</span> and <span class="text-electricMagenta font-semibold">UI/UX design</span>.
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#project-archives" data-sfx="click" class="clip-btn bg-cyberYellow hover:bg-neonCyan text-void font-orbitron font-bold text-sm px-6 py-3.5 transition-all flex items-center gap-2 glow-yellow">
+                            <i data-lucide="folder-kanban" class="w-4 h-4"></i>
+                            EXPLORE_ARCHIVES [05]
+                        </a>
+                        <a href="#showreel-deck" data-sfx="click" class="clip-btn bg-voidPanel hover:bg-white/10 text-neonCyan border border-neonCyan/60 font-orbitron font-bold text-sm px-6 py-3.5 transition-all flex items-center gap-2">
+                            <i data-lucide="Sliders" class="w-4 h-4"></i>
+                            LAUNCH_NLE_SIMULATOR
+                        </a>
+                        <a href="#transmit" data-sfx="click" class="font-mono text-xs text-slate-300 hover:text-cyberYellow underline underline-offset-4 px-2 py-2">
+                            // INITIATE_DIRECT_BRIEF &rarr;
+                        </a>
+                    </div>
+
+                    <!-- Quick Stats HUD Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4">
+                        <div class="bg-voidPanel/90 border border-neonCyan/40 p-4 clip-angled-sm hover:border-cyberYellow transition-all group">
+                            <div class="flex items-center justify-between font-mono text-[11px] text-neonCyan mb-1">
+                                <span>[CORE_FOCUS]</span>
+                                <i data-lucide="film" class="w-3.5 h-3.5 group-hover:text-cyberYellow"></i>
+                            </div>
+                            <div class="font-orbitron font-bold text-sm text-white">Commercials, Reels & Motion Graphics</div>
+                            <div class="text-xs text-slate-400 mt-1 font-mono">High-Retention Cuts & Jingles</div>
+                        </div>
+
+                        <div class="bg-voidPanel/90 border border-cyberYellow/40 p-4 clip-angled-sm hover:border-neonCyan transition-all group">
+                            <div class="flex items-center justify-between font-mono text-[11px] text-cyberYellow mb-1">
+                                <span>[AI_PIPELINE]</span>
+                                <i data-lucide="cpu" class="w-3.5 h-3.5 group-hover:text-neonCyan"></i>
+                            </div>
+                            <div class="font-orbitron font-bold text-sm text-white">Veo, Nano Banana & Omni Flash</div>
+                            <div class="text-xs text-slate-400 mt-1 font-mono">Generative Product Visuals</div>
+                        </div>
+
+                        <div class="bg-voidPanel/90 border border-electricMagenta/40 p-4 clip-angled-sm hover:border-terminalGreen transition-all group">
+                            <div class="flex items-center justify-between font-mono text-[11px] text-electricMagenta mb-1">
+                                <span>[DESIGN_SYSTEMS]</span>
+                                <i data-lucide="layers" class="w-3.5 h-3.5 group-hover:text-terminalGreen"></i>
+                            </div>
+                            <div class="font-orbitron font-bold text-sm text-white">UI/UX & Risograph Collage</div>
+                            <div class="text-xs text-slate-400 mt-1 font-mono">Paper Cutout & Case Studies</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Hero Showreel Monitor -->
+                <div class="lg:col-span-5">
+                    <div class="bg-voidPanel border-2 border-neonCyan/60 clip-card p-3 sm:p-4 glow-cyan relative">
+                        <!-- Top Deck Header -->
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3 font-mono text-xs">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-electricMagenta animate-pulse"></span>
+                                <span class="text-white font-bold">DECK_01 // SHOWREEL_MONITOR</span>
+                            </div>
+                            <span id="heroTimecode" class="px-2 py-0.5 bg-void border border-cyberYellow/40 text-cyberYellow rounded">00:00:14:22</span>
+                        </div>
+
+                        <!-- Interactive Canvas Monitor -->
+                        <div class="relative rounded overflow-hidden border border-slate-800 bg-void aspect-[4/3]">
+                            <canvas id="heroShowreelCanvas" class="w-full h-full block cursor-pointer" title="Click to toggle Play/Pause"></canvas>
+                            
+                            <!-- Floating HUD Overlay Badges inside Monitor -->
+                            <div class="absolute top-3 left-3 pointer-events-none flex flex-wrap gap-1.5 font-mono text-[10px]">
+                                <span id="heroModeBadge" class="px-2 py-0.5 bg-void/80 border border-neonCyan text-neonCyan rounded">LAYER: VFX_COMP</span>
+                                <span class="px-2 py-0.5 bg-void/80 border border-slate-700 text-slate-300 rounded">1080x1350 // 60FPS</span>
+                            </div>
+                            <div class="absolute bottom-3 right-3 pointer-events-none font-mono text-[10px] px-2 py-0.5 bg-void/80 border border-cyberYellow/50 text-cyberYellow rounded">
+                                PR_PRO + AE_EXPR + VEO_AI
+                            </div>
+                        </div>
+
+                        <!-- Monitor Layer Mode Switcher -->
+                        <div class="mt-3 grid grid-cols-3 gap-1.5 font-mono text-[11px]">
+                            <button onclick="setHeroLayerMode('RAW_CUT')" id="heroBtnRaw" class="py-1.5 px-2 rounded border border-slate-700 bg-void text-slate-400 hover:text-white transition-all">
+                                01: RAW_CUT
+                            </button>
+                            <button onclick="setHeroLayerMode('VFX_COMP')" id="heroBtnVfx" class="py-1.5 px-2 rounded border border-neonCyan bg-neonCyan/20 text-neonCyan font-bold transition-all">
+                                02: VFX_COMP
+                            </button>
+                            <button onclick="setHeroLayerMode('HALFTONE_GRADE')" id="heroBtnHalftone" class="py-1.5 px-2 rounded border border-slate-700 bg-void text-slate-400 hover:text-white transition-all">
+                                03: HALFTONE_GRADE
+                            </button>
+                        </div>
+
+                        <!-- Playback Controls & Scrubber -->
+                        <div class="mt-3 pt-2.5 border-t border-slate-800 flex items-center gap-3">
+                            <button id="heroPlayBtn" onclick="toggleHeroPlayback()" class="w-9 h-9 rounded bg-cyberYellow text-void flex items-center justify-center hover:bg-neonCyan transition-colors shrink-0" title="Play/Pause Monitor">
+                                <i data-lucide="pause" id="heroPlayIcon" class="w-4 h-4"></i>
+                            </button>
+                            <div class="flex-1">
+                                <input id="heroScrubber" type="range" min="0" max="100" value="42" class="w-full cyber-range" oninput="scrubHeroMonitor(this.value)">
+                                <div class="flex justify-between font-mono text-[10px] text-slate-400 mt-1">
+                                    <span>KEYFRAME_01: KINETIC_HOOK</span>
+                                    <span>HALFTONE_CUTOUT</span>
+                                    <span>AI_PRODUCT_OUTRO</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             02_ARSENAL // TECHNICAL SKILL MATRIX
+             ========================================== -->
+        <section id="arsenal" class="scroll-mt-28 space-y-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-4 gap-4">
+                <div>
+                    <div class="font-mono text-xs text-neonCyan tracking-widest mb-1">// SECTION_02 // TECHNICAL_CAPABILITIES</div>
+                    <h2 class="font-orbitron font-black text-2xl sm:text-4xl text-white uppercase">
+                        TECHNICAL <span class="text-cyberYellow">ARSENAL</span> & SKILL MATRIX
+                    </h2>
+                </div>
+                <!-- Category Filter Tabs -->
+                <div class="flex flex-wrap gap-2 font-mono text-xs">
+                    <button onclick="filterArsenal('ALL')" id="arsenalTab-ALL" class="arsenal-tab px-3.5 py-2 clip-tab bg-cyberYellow text-void font-bold transition-all">ALL_SYSTEMS [03]</button>
+                    <button onclick="filterArsenal('VIDEO')" id="arsenalTab-VIDEO" class="arsenal-tab px-3.5 py-2 clip-tab bg-voidPanel border border-slate-700 text-slate-300 hover:border-neonCyan transition-all">VIDEO_&_MOTION</button>
+                    <button onclick="filterArsenal('AI')" id="arsenalTab-AI" class="arsenal-tab px-3.5 py-2 clip-tab bg-voidPanel border border-slate-700 text-slate-300 hover:border-neonCyan transition-all">AI_&_MIXED_MEDIA</button>
+                    <button onclick="filterArsenal('UIUX')" id="arsenalTab-UIUX" class="arsenal-tab px-3.5 py-2 clip-tab bg-voidPanel border border-slate-700 text-slate-300 hover:border-neonCyan transition-all">UI/UX_DESIGN</button>
+                </div>
+            </div>
+
+            <!-- Arsenal Matrix Grid -->
+            <div id="arsenalGrid" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Module 1: Video & Motion Engineering -->
+                <div data-arsenal-cat="VIDEO" class="bg-voidPanel border border-neonCyan/40 clip-card p-6 flex flex-col justify-between relative group hover:border-neonCyan transition-all">
+                    <div>
+                        <div class="flex items-center justify-between font-mono text-xs text-neonCyan mb-3">
+                            <span>MODULE_01 // NLE & VFX</span>
+                            <span class="px-2 py-0.5 bg-neonCyan/10 border border-neonCyan/40 rounded">SYNC: 98%</span>
+                        </div>
+                        <h3 class="font-orbitron font-bold text-xl text-white mb-2 flex items-center gap-2">
+                            <i data-lucide="clapperboard" class="w-5 h-5 text-neonCyan"></i>
+                            Video & Motion Engineering
+                        </h3>
+                        <p class="text-slate-400 text-sm mb-5">
+                            Frame-accurate commercial editing, speed-graph kinetic typography, visual hierarchy, and custom Hindi/Hinglish audio jingle synchronization.
+                        </p>
+
+                        <!-- Progress Telemetry Bars -->
+                        <div class="space-y-3.5 mb-6 font-mono text-xs">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">Adobe Premiere Pro & After Effects</span>
+                                    <span class="text-neonCyan">98%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-gradient-to-r from-neonCyan to-cyberYellow w-[98%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">Kinetic Typography & Speed Graphs</span>
+                                    <span class="text-neonCyan">96%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-neonCyan w-[96%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">Commercial Ad Editing & Audio Jingle Sync</span>
+                                    <span class="text-neonCyan">95%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-neonCyan w-[95%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool Tags -->
+                    <div class="flex flex-wrap gap-1.5 pt-4 border-t border-slate-800/80 font-mono text-[11px]">
+                        <span class="px-2.5 py-1 bg-void border border-neonCyan/40 text-neonCyan rounded">Adobe Premiere Pro</span>
+                        <span class="px-2.5 py-1 bg-void border border-neonCyan/40 text-neonCyan rounded">Adobe After Effects</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Kinetic Typography</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Dynamic Text Alignment</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Visual Hierarchy</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Short-Form Reels</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Commercial Ad Editing</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Audio Jingle Sync</span>
+                    </div>
+                </div>
+
+                <!-- Module 2: Generative AI & Mixed Media Art -->
+                <div data-arsenal-cat="AI" class="bg-voidPanel border border-cyberYellow/40 clip-card p-6 flex flex-col justify-between relative group hover:border-cyberYellow transition-all">
+                    <div>
+                        <div class="flex items-center justify-between font-mono text-xs text-cyberYellow mb-3">
+                            <span>MODULE_02 // GEN_AI & TEXTURE</span>
+                            <span class="px-2 py-0.5 bg-cyberYellow/10 border border-cyberYellow/40 rounded">SYNC: 95%</span>
+                        </div>
+                        <h3 class="font-orbitron font-bold text-xl text-white mb-2 flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-cyberYellow"></i>
+                            Generative AI & Mixed Media Art
+                        </h3>
+                        <p class="text-slate-400 text-sm mb-5">
+                            Combining next-gen AI video synthesis with tactile analog aesthetics—halftone dot matrices, risograph grain, and layered paper-cutout motion.
+                        </p>
+
+                        <!-- Progress Telemetry Bars -->
+                        <div class="space-y-3.5 mb-6 font-mono text-xs">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">Veo, Nano Banana & Omni Flash Pipelines</span>
+                                    <span class="text-cyberYellow">95%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-gradient-to-r from-cyberYellow to-electricMagenta w-[95%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">Paper Cutout & Digital Collage Aesthetics</span>
+                                    <span class="text-cyberYellow">96%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-cyberYellow w-[96%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">Halftone, Risograph & AI Product Anim</span>
+                                    <span class="text-cyberYellow">92%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-cyberYellow w-[92%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool Tags -->
+                    <div class="flex flex-wrap gap-1.5 pt-4 border-t border-slate-800/80 font-mono text-[11px]">
+                        <span class="px-2.5 py-1 bg-void border border-cyberYellow/50 text-cyberYellow rounded">Veo</span>
+                        <span class="px-2.5 py-1 bg-void border border-cyberYellow/50 text-cyberYellow rounded">Nano Banana</span>
+                        <span class="px-2.5 py-1 bg-void border border-cyberYellow/50 text-cyberYellow rounded">Omni Flash</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">AI Commercial Concepts</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Product Animations</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Digital Collage</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Paper Cutout Aesthetics</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Halftone & Risograph</span>
+                    </div>
+                </div>
+
+                <!-- Module 3: UI/UX & Product Design -->
+                <div data-arsenal-cat="UIUX" class="bg-voidPanel border border-electricMagenta/40 clip-card p-6 flex flex-col justify-between relative group hover:border-electricMagenta transition-all">
+                    <div>
+                        <div class="flex items-center justify-between font-mono text-xs text-electricMagenta mb-3">
+                            <span>MODULE_03 // PRODUCT & INTERACTION</span>
+                            <span class="px-2 py-0.5 bg-electricMagenta/10 border border-electricMagenta/40 rounded">SYNC: 94%</span>
+                        </div>
+                        <h3 class="font-orbitron font-bold text-xl text-white mb-2 flex items-center gap-2">
+                            <i data-lucide="smartphone" class="w-5 h-5 text-electricMagenta"></i>
+                            UI/UX & Product Design
+                        </h3>
+                        <p class="text-slate-400 text-sm mb-5">
+                            End-to-end mobile application design, user-centric e-commerce flows, comprehensive multi-slide UX case studies, and interactive prototyping.
+                        </p>
+
+                        <!-- Progress Telemetry Bars -->
+                        <div class="space-y-3.5 mb-6 font-mono text-xs">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">Mobile App UI Design & Design Systems</span>
+                                    <span class="text-electricMagenta">94%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-gradient-to-r from-electricMagenta to-neonCyan w-[94%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">Interactive Case Studies & Deck Architecture</span>
+                                    <span class="text-electricMagenta">96%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-electricMagenta w-[96%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-white">User Flows, Wireframing & Prototyping</span>
+                                    <span class="text-electricMagenta">92%</span>
+                                </div>
+                                <div class="h-2 bg-void rounded overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-electricMagenta w-[92%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool Tags -->
+                    <div class="flex flex-wrap gap-1.5 pt-4 border-t border-slate-800/80 font-mono text-[11px]">
+                        <span class="px-2.5 py-1 bg-void border border-electricMagenta/50 text-electricMagenta rounded">Mobile App UI Design</span>
+                        <span class="px-2.5 py-1 bg-void border border-electricMagenta/50 text-electricMagenta rounded">Interactive Case Studies</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">User Flows</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Wireframing</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Portfolio Presentation Design</span>
+                        <span class="px-2.5 py-1 bg-void border border-slate-700 text-slate-300 rounded">Design Systems</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             03_PROJECT_ARCHIVES // FILTERABLE GRID & MODAL
+             ========================================== -->
+        <section id="project-archives" class="scroll-mt-28 space-y-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-4 gap-4">
+                <div>
+                    <div class="font-mono text-xs text-cyberYellow tracking-widest mb-1">// SECTION_03 // VERIFIED_DEPLOYMENTS</div>
+                    <h2 class="font-orbitron font-black text-2xl sm:text-4xl text-white uppercase">
+                        PROJECT <span class="text-neonCyan">ARCHIVES</span> // INSPECT_FILES
+                    </h2>
+                </div>
+
+                <!-- Project Category Filter Buttons -->
+                <div class="flex flex-wrap gap-2 font-mono text-xs">
+                    <button onclick="filterProjects('ALL')" id="projFilter-ALL" class="proj-filter-btn px-3.5 py-2 clip-tab bg-neonCyan text-void font-bold transition-all">ALL [05]</button>
+                    <button onclick="filterProjects('COMMERCIAL & MOTION')" id="projFilter-COMMERCIAL" class="proj-filter-btn px-3.5 py-2 clip-tab bg-voidPanel border border-slate-700 text-slate-300 hover:border-cyberYellow transition-all">COMMERCIAL & MOTION</button>
+                    <button onclick="filterProjects('AI & COLLAGE')" id="projFilter-AI" class="proj-filter-btn px-3.5 py-2 clip-tab bg-voidPanel border border-slate-700 text-slate-300 hover:border-cyberYellow transition-all">AI & COLLAGE</button>
+                    <button onclick="filterProjects('UI/UX CASE STUDY')" id="projFilter-UIUX" class="proj-filter-btn px-3.5 py-2 clip-tab bg-voidPanel border border-slate-700 text-slate-300 hover:border-cyberYellow transition-all">UI/UX CASE STUDY</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Project Cards Grid -->
+            <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Populated dynamically via JS from projectData array -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+             04_SHOWREEL_DECK // INTERACTIVE NLE TIMELINE SIMULATOR
+             ========================================== -->
+        <section id="showreel-deck" class="scroll-mt-28 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-4 gap-4">
+                <div>
+                    <div class="font-mono text-xs text-terminalGreen tracking-widest mb-1">// SECTION_04 // LIVE_MULTI_TRACK_ENGINE</div>
+                    <h2 class="font-orbitron font-black text-2xl sm:text-4xl text-white uppercase">
+                        INTERACTIVE <span class="text-cyberYellow">NLE TIMELINE</span> SIMULATOR
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-1">
+                        Toggle video/audio layers, switch commercial sequences, or scrub the playhead to inspect how Mohit composites kinetic typography, cutout textures, and AI renders.
+                    </p>
+                </div>
+                <!-- Preset Scene Switcher -->
+                <div class="flex flex-wrap gap-2 font-mono text-xs">
+                    <button onclick="setNLEScene(0)" id="nleSceneBtn-0" class="px-3 py-2 rounded border border-cyberYellow bg-cyberYellow/20 text-cyberYellow font-bold">SEQ_01: MONITRAQ_AD</button>
+                    <button onclick="setNLEScene(1)" id="nleSceneBtn-1" class="px-3 py-2 rounded border border-slate-700 bg-voidPanel text-slate-300 hover:border-neonCyan">SEQ_02: DUKOLL_TILES</button>
+                    <button onclick="setNLEScene(2)" id="nleSceneBtn-2" class="px-3 py-2 rounded border border-slate-700 bg-voidPanel text-slate-300 hover:border-electricMagenta">SEQ_03: RISO_AI_REEL</button>
+                </div>
+            </div>
+
+            <!-- NLE Workstation Interface -->
+            <div class="bg-voidPanel border-2 border-neonCyan/50 clip-card p-4 sm:p-6 space-y-6 glow-cyan">
+                
+                <!-- Top Split: Program Monitor + Real-Time Inspector -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    
+                    <!-- Program Canvas Monitor (7 cols) -->
+                    <div class="lg:col-span-7 flex flex-col justify-between bg-void border border-slate-800 rounded p-3">
+                        <div class="flex items-center justify-between font-mono text-xs mb-2">
+                            <span class="text-neonCyan font-bold flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-terminalGreen"></span>
+                                PROGRAM_MONITOR // <span id="nleActiveSeqLabel" class="text-cyberYellow">MONITRAQ_HEALTH_MASTER.PRPROJ</span>
+                            </span>
+                            <span id="nleTimecodeDisplay" class="px-2 py-0.5 bg-voidPanel border border-slate-700 text-cyberYellow rounded">00:00:04:12</span>
+                        </div>
+
+                        <div class="relative aspect-video bg-black rounded overflow-hidden border border-slate-800">
+                            <canvas id="nleSimulatorCanvas" class="w-full h-full block"></canvas>
+                        </div>
+
+                        <!-- Transport Controls Bar -->
+                        <div class="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800 font-mono text-xs">
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleNLEPlay()" id="nlePlayBtn" class="px-3 py-1.5 bg-cyberYellow text-void font-bold rounded flex items-center gap-1.5 hover:bg-neonCyan transition-colors">
+                                    <i data-lucide="pause" id="nlePlayIcon" class="w-3.5 h-3.5"></i>
+                                    <span id="nlePlayText">PAUSE</span>
+                                </button>
+                                <button onclick="resetNLEPlayhead()" class="px-2.5 py-1.5 bg-voidPanel border border-slate-700 text-slate-300 hover:text-white rounded" title="Jump to Start">
+                                    <i data-lucide="skip-back" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="triggerJingleChord()" class="px-3 py-1.5 bg-electricMagenta/20 border border-electricMagenta text-electricMagenta hover:bg-electricMagenta hover:text-white rounded flex items-center gap-1.5 transition-colors">
+                                    <i data-lucide="music" class="w-3.5 h-3.5"></i>
+                                    SYNTH_JINGLE_BEAT
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-slate-400">SPEED:</span>
+                                <button onclick="setNLESpeed(0.5)" id="nleSpd-05" class="px-2 py-1 rounded bg-void border border-slate-700 text-slate-400">0.5x</button>
+                                <button onclick="setNLESpeed(1)" id="nleSpd-10" class="px-2 py-1 rounded bg-neonCyan/20 border border-neonCyan text-neonCyan font-bold">1.0x</button>
+                                <button onclick="setNLESpeed(2)" id="nleSpd-20" class="px-2 py-1 rounded bg-void border border-slate-700 text-slate-400">2.0x</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Effect Controls & Telemetry Panel (5 cols) -->
+                    <div class="lg:col-span-5 bg-void border border-slate-800 rounded p-4 flex flex-col justify-between font-mono text-xs">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <span class="text-white font-bold">EFFECT_CONTROLS // ACTIVE_STACK</span>
+                                <span class="text-terminalGreen">GPU_ACCEL: ON</span>
+                            </div>
+
+                            <!-- Active Layer Status Pills -->
+                            <div class="space-y-2.5">
+                                <div class="p-2.5 rounded bg-voidPanel border border-slate-800 flex items-center justify-between">
+                                    <div>
+                                        <div class="text-cyberYellow font-bold">V3: KINETIC_TEXT_FX</div>
+                                        <div class="text-[11px] text-slate-400">Bezier Speed Graph + Dynamic Tracking</div>
+                                    </div>
+                                    <span id="statusBadgeV3" class="px-2 py-0.5 bg-terminalGreen/20 text-terminalGreen border border-terminalGreen/40 rounded">ACTIVE</span>
+                                </div>
+
+                                <div class="p-2.5 rounded bg-voidPanel border border-slate-800 flex items-center justify-between">
+                                    <div>
+                                        <div class="text-electricMagenta font-bold">V2: PAPER_CUTOUT_OVERLAY</div>
+                                        <div class="text-[11px] text-slate-400">Halftone Dot Matrix + Drop Shadow Stop-Motion</div>
+                                    </div>
+                                    <span id="statusBadgeV2" class="px-2 py-0.5 bg-terminalGreen/20 text-terminalGreen border border-terminalGreen/40 rounded">ACTIVE</span>
+                                </div>
+
+                                <div class="p-2.5 rounded bg-voidPanel border border-slate-800 flex items-center justify-between">
+                                    <div>
+                                        <div class="text-neonCyan font-bold">V1: AI_BASE_RENDER</div>
+                                        <div class="text-[11px] text-slate-400">Veo / Nano Banana / Omni Flash Plate</div>
+                                    </div>
+                                    <span id="statusBadgeV1" class="px-2 py-0.5 bg-terminalGreen/20 text-terminalGreen border border-terminalGreen/40 rounded">ACTIVE</span>
+                                </div>
+
+                                <div class="p-2.5 rounded bg-voidPanel border border-slate-800 flex items-center justify-between">
+                                    <div>
+                                        <div class="text-terminalGreen font-bold">A1: CUSTOM_JINGLE_WAVEFORM</div>
+                                        <div class="text-[11px] text-slate-400">Bilingual Brand Hook + Beat Markers</div>
+                                    </div>
+                                    <span id="statusBadgeA1" class="px-2 py-0.5 bg-terminalGreen/20 text-terminalGreen border border-terminalGreen/40 rounded">ACTIVE</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Expression Box -->
+                        <div class="mt-4 p-3 bg-voidPanel border border-neonCyan/30 rounded text-[11px] text-slate-300">
+                            <div class="text-neonCyan mb-1">// AE_EXPRESSION_ENGINE:</div>
+                            <code class="text-cyberYellow block">freq = 2.5; amp = 35; decay = 4.0;</code>
+                            <code class="text-slate-400 block">posterizeTime(12); // Tactile Cutout Cadence</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Multi-Track Timeline Matrix -->
+                <div class="bg-void border border-slate-800 rounded p-3 sm:p-4 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-xs border-b border-slate-800 pb-2">
+                        <span class="text-slate-300">TIMELINE_SCRUBBER // DRAG PLAYHEAD TO INSPECT FRAMES</span>
+                        <span class="text-neonCyan">FRAME: <span id="nleFrameCounter">108</span> / 300</span>
+                    </div>
+
+                    <!-- Master Scrubber Slider -->
+                    <input id="nleTimelineScrubber" type="range" min="0" max="300" value="108" class="w-full cyber-range" oninput="scrubNLE(this.value)">
+
+                    <!-- Tracks Stack -->
+                    <div class="space-y-2 font-mono text-xs pt-1">
+                        <!-- Track V3 -->
+                        <div class="grid grid-cols-12 gap-2 items-center">
+                            <div class="col-span-4 sm:col-span-3 flex items-center gap-2 bg-voidPanel p-2 rounded border border-slate-800">
+                                <button onclick="toggleNLETrack('V3')" id="trackBtn-V3" class="w-6 h-6 rounded bg-cyberYellow text-void flex items-center justify-center font-bold" title="Toggle Track Visibility">V3</button>
+                                <span class="truncate text-white text-[11px]">KINETIC_TEXT_FX</span>
+                            </div>
+                            <div class="col-span-8 sm:col-span-9 h-9 bg-voidPanel rounded border border-cyberYellow/40 relative overflow-hidden flex items-center px-3">
+                                <div class="h-6 w-[28%] bg-cyberYellow/25 border border-cyberYellow text-cyberYellow text-[10px] flex items-center px-2 rounded mr-2 truncate">[HOOK_TYPO_IN]</div>
+                                <div class="h-6 w-[42%] bg-cyberYellow/25 border border-cyberYellow text-cyberYellow text-[10px] flex items-center px-2 rounded mr-2 truncate">[SPEED_RAMP_CAPTIONS]</div>
+                                <div class="h-6 w-[25%] bg-cyberYellow/25 border border-cyberYellow text-cyberYellow text-[10px] flex items-center px-2 rounded truncate">[CTA_SLAM]</div>
+                            </div>
+                        </div>
+
+                        <!-- Track V2 -->
+                        <div class="grid grid-cols-12 gap-2 items-center">
+                            <div class="col-span-4 sm:col-span-3 flex items-center gap-2 bg-voidPanel p-2 rounded border border-slate-800">
+                                <button onclick="toggleNLETrack('V2')" id="trackBtn-V2" class="w-6 h-6 rounded bg-electricMagenta text-white flex items-center justify-center font-bold" title="Toggle Track Visibility">V2</button>
+                                <span class="truncate text-white text-[11px]">PAPER_CUTOUT_OVERLAY</span>
+                            </div>
+                            <div class="col-span-8 sm:col-span-9 h-9 bg-voidPanel rounded border border-electricMagenta/40 relative overflow-hidden flex items-center px-3 halftone-bg">
+                                <div class="h-6 w-[55%] ml-[10%] bg-electricMagenta/30 border border-electricMagenta text-white text-[10px] flex items-center px-2 rounded mr-3 truncate">[RISOGRAPH_COLLAGE_MATTE.PSD]</div>
+                                <div class="h-6 w-[30%] bg-electricMagenta/30 border border-electricMagenta text-white text-[10px] flex items-center px-2 rounded truncate">[HALFTONE_GRAIN_LOOP]</div>
+                            </div>
+                        </div>
+
+                        <!-- Track V1 -->
+                        <div class="grid grid-cols-12 gap-2 items-center">
+                            <div class="col-span-4 sm:col-span-3 flex items-center gap-2 bg-voidPanel p-2 rounded border border-slate-800">
+                                <button onclick="toggleNLETrack('V1')" id="trackBtn-V1" class="w-6 h-6 rounded bg-neonCyan text-void flex items-center justify-center font-bold" title="Toggle Track Visibility">V1</button>
+                                <span class="truncate text-white text-[11px]">AI_BASE_RENDER</span>
+                            </div>
+                            <div class="col-span-8 sm:col-span-9 h-9 bg-voidPanel rounded border border-neonCyan/40 relative overflow-hidden flex items-center px-2">
+                                <div class="h-6 w-full bg-neonCyan/20 border border-neonCyan text-neonCyan text-[10px] flex items-center justify-between px-3 rounded truncate">
+                                    <span>[VEO_NANO_BANANA_OMNI_FLASH_MASTER_RENDER.MP4]</span>
+                                    <span>4K_UPSCALE</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Track A1 -->
+                        <div class="grid grid-cols-12 gap-2 items-center">
+                            <div class="col-span-4 sm:col-span-3 flex items-center gap-2 bg-voidPanel p-2 rounded border border-slate-800">
+                                <button onclick="toggleNLETrack('A1')" id="trackBtn-A1" class="w-6 h-6 rounded bg-terminalGreen text-void flex items-center justify-center font-bold" title="Toggle Track Visibility">A1</button>
+                                <span class="truncate text-white text-[11px]">CUSTOM_JINGLE_WAV</span>
+                            </div>
+                            <div class="col-span-8 sm:col-span-9 h-9 bg-voidPanel rounded border border-terminalGreen/40 relative overflow-hidden flex items-center px-3">
+                                <div class="w-full flex items-center gap-1 h-5" id="timelineWaveformBars">
+                                    <!-- Generated waveform bars -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             05_DATALOGS // EXPERIENCE & EDUCATION
+             ========================================== -->
+        <section id="datalogs" class="scroll-mt-28 space-y-8">
+            <div class="border-b border-slate-800 pb-4">
+                <div class="font-mono text-xs text-electricMagenta tracking-widest mb-1">// SECTION_05 // ENCRYPTED_CAREER_TELEMETRY</div>
+                <h2 class="font-orbitron font-black text-2xl sm:text-4xl text-white uppercase">
+                    EXPERIENCE & EDUCATION <span class="text-cyberYellow">DATALOGS</span>
+                </h2>
+            </div>
+
+            <div class="relative border-l-2 border-neonCyan/40 ml-3 sm:ml-6 pl-6 sm:pl-8 space-y-8">
+                
+                <!-- Node 1: Current Video Editor -->
+                <div class="relative bg-voidPanel border border-cyberYellow/50 clip-card p-6 hover:border-cyberYellow transition-all">
+                    <span class="absolute -left-[33px] sm:-left-[41px] top-6 w-4 h-4 rounded-full bg-cyberYellow border-4 border-void glow-yellow"></span>
+                    <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-xs mb-2">
+                        <span class="px-2.5 py-0.5 bg-cyberYellow text-void font-bold rounded">[CURRENT_NODE // ACTIVE]</span>
+                        <span class="text-neonCyan">LOC: DELHI_NCR // AGENCY_OPERATIONS</span>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-xl text-white">VIDEO EDITOR // VIDEO EDITING AGENCY</h3>
+                    <p class="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
+                        Producing commercial advertisements, high-retention short-form reels, kinetic typography edits, and motion graphics for brand clients. Engineering fast-paced visual hooks, dynamic text layouts, and multi-platform campaign deliverables.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-4 font-mono text-[11px] text-slate-400">
+                        <span class="px-2 py-0.5 bg-void border border-slate-800 rounded">#CommercialAds</span>
+                        <span class="px-2 py-0.5 bg-void border border-slate-800 rounded">#KineticTypography</span>
+                        <span class="px-2 py-0.5 bg-void border border-slate-800 rounded">#ShortFormReels</span>
+                        <span class="px-2 py-0.5 bg-void border border-slate-800 rounded">#BrandCampaigns</span>
+                    </div>
+                </div>
+
+                <!-- Node 2: Freelance Remote Video Editor & AI Creative -->
+                <div class="relative bg-voidPanel border border-neonCyan/40 clip-card p-6 hover:border-neonCyan transition-all">
+                    <span class="absolute -left-[33px] sm:-left-[41px] top-6 w-4 h-4 rounded-full bg-neonCyan border-4 border-void glow-cyan"></span>
+                    <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-xs mb-2">
+                        <span class="px-2.5 py-0.5 bg-neonCyan/20 border border-neonCyan text-neonCyan font-bold rounded">[FREELANCE // REMOTE_UNIT]</span>
+                        <span class="text-slate-400">CLIENT_CAMPAIGNS: MONITRAQ, DUKOLL & MORE</span>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-xl text-white">REMOTE VIDEO EDITOR & AI CREATIVE</h3>
+                    <p class="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
+                        Delivering end-to-end commercial scripts, custom motion design assets, generative AI product visuals (utilizing Veo, Nano Banana, and Omni Flash), tactile paper-cutout & risograph animations, and original Hindi/Hinglish brand jingles.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-4 font-mono text-[11px] text-slate-400">
+                        <span class="px-2 py-0.5 bg-void border border-slate-800 rounded">#GenerativeAIVideo</span>
+                        <span class="px-2 py-0.5 bg-void border border-slate-800 rounded">#AudioJingles</span>
+                        <span class="px-2 py-0.5 bg-void border border-slate-800 rounded">#RisographCollage</span>
+                        <span class="px-2 py-0.5 bg-void border border-slate-800 rounded">#ScriptToScreen</span>
+                    </div>
+                </div>
+
+                <!-- Node 3: Previous Customer Support Executive -->
+                <div class="relative bg-voidPanel border border-slate-700 clip-card p-6 hover:border-electricMagenta transition-all">
+                    <span class="absolute -left-[33px] sm:-left-[41px] top-6 w-4 h-4 rounded-full bg-electricMagenta border-4 border-void"></span>
+                    <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-xs mb-2">
+                        <span class="px-2.5 py-0.5 bg-electricMagenta/20 border border-electricMagenta text-electricMagenta font-bold rounded">[PREVIOUS_LOG // 1_YEAR_EXP]</span>
+                        <span class="text-slate-400">CLIENT_RELATIONS & OPS</span>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-xl text-white">CUSTOMER SUPPORT EXECUTIVE // THE ROLLING PLATE</h3>
+                    <p class="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
+                        1 year of dedicated experience managing multi-channel client communications, issue resolution, and support operations—building strong foundations in user empathy, clear communication, and client retention.
+                    </p>
+                </div>
+
+                <!-- Node 4: Education & Technical Credentials -->
+                <div class="relative bg-voidPanel border border-terminalGreen/40 clip-card p-6 hover:border-terminalGreen transition-all">
+                    <span class="absolute -left-[33px] sm:-left-[41px] top-6 w-4 h-4 rounded-full bg-terminalGreen border-4 border-void"></span>
+                    <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-xs mb-2">
+                        <span class="px-2.5 py-0.5 bg-terminalGreen/20 border border-terminalGreen text-terminalGreen font-bold rounded">[EDUCATION_CORE // ACADEMIC_NODES]</span>
+                        <span class="text-slate-400">IGNOU + SPECIALIZED DIPLOMA</span>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-xl text-white">BACHELOR OF COMPUTER APPLICATIONS (BCA) // IGNOU</h3>
+                    <p class="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
+                        Pursuing BCA from Indira Gandhi National Open University (IGNOU), paired with a specialized <span class="text-cyberYellow font-semibold">Computer Diploma</span> covering Video Editing, Graphic Design, and MS Office, built on a <span class="text-neonCyan font-semibold">CBSE Commerce</span> academic foundation.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             06_TRANSMIT // INTERACTIVE PROJECT ESTIMATOR & BRIEF BUILDER
+             ========================================== -->
+        <section id="transmit" class="scroll-mt-28 space-y-8">
+            <div class="border-b border-slate-800 pb-4">
+                <div class="font-mono text-xs text-cyberYellow tracking-widest mb-1">// SECTION_06 // ENCRYPTED_UPLINK_TERMINAL</div>
+                <h2 class="font-orbitron font-black text-2xl sm:text-4xl text-white uppercase">
+                    TRANSMIT <span class="text-neonCyan">SIGNAL</span> // PROJECT BRIEF BUILDER
+                </h2>
+                <p class="text-slate-400 text-sm mt-1">
+                    Configure your production parameters below to generate an encrypted project brief and initiate direct communication with Mohit.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Left Column: Interactive Configurator Form (7 Cols) -->
+                <div class="lg:col-span-7 bg-voidPanel border border-neonCyan/40 clip-card p-6 space-y-6">
+                    
+                    <!-- Step 1: Select Project Type -->
+                    <div>
+                        <label class="block font-mono text-xs text-cyberYellow uppercase mb-2.5">
+                            01 // SELECT_MISSION_TYPE:
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-xs" id="briefTypeContainer">
+                            <button type="button" onclick="selectBriefType('Commercial Video / Ad', 'PR_PRO + AE + JINGLE', '5-7 DAYS')" class="brief-type-btn p-3 rounded border border-cyberYellow bg-cyberYellow/15 text-cyberYellow font-bold text-left flex items-center justify-between">
+                                <span>Commercial Video / Ad</span>
+                                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" onclick="selectBriefType('Short-Form Reels Package', 'KINETIC_TYPO + HOOKS', '2-4 DAYS')" class="brief-type-btn p-3 rounded border border-slate-700 bg-void text-slate-300 hover:border-neonCyan text-left flex items-center justify-between">
+                                <span>Short-Form Reels Package</span>
+                                <i data-lucide="circle" class="w-4 h-4 opacity-40"></i>
+                            </button>
+                            <button type="button" onclick="selectBriefType('Motion Graphics / Kinetic Typo', 'AFTER_EFFECTS_VFX', '3-5 DAYS')" class="brief-type-btn p-3 rounded border border-slate-700 bg-void text-slate-300 hover:border-neonCyan text-left flex items-center justify-between">
+                                <span>Motion Graphics / Kinetic Typo</span>
+                                <i data-lucide="circle" class="w-4 h-4 opacity-40"></i>
+                            </button>
+                            <button type="button" onclick="selectBriefType('AI Video Concept & Collage', 'VEO + NANO_BANANA + RISO', '3-6 DAYS')" class="brief-type-btn p-3 rounded border border-slate-700 bg-void text-slate-300 hover:border-neonCyan text-left flex items-center justify-between">
+                                <span>AI Video Concept & Collage</span>
+                                <i data-lucide="circle" class="w-4 h-4 opacity-40"></i>
+                            </button>
+                            <button type="button" onclick="selectBriefType('UI/UX Case Study & App Design', 'MOBILE_UI + 16_SLIDE_UX', '7-10 DAYS')" class="brief-type-btn p-3 rounded border border-slate-700 bg-void text-slate-300 hover:border-neonCyan text-left flex items-center justify-between sm:col-span-2">
+                                <span>UI/UX Case Study & Mobile App Design</span>
+                                <i data-lucide="circle" class="w-4 h-4 opacity-40"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Select Turnaround Speed -->
+                    <div>
+                        <label class="block font-mono text-xs text-neonCyan uppercase mb-2.5">
+                            02 // TURNAROUND_VELOCITY:
+                        </label>
+                        <div class="grid grid-cols-3 gap-2.5 font-mono text-xs">
+                            <button type="button" onclick="selectUrgency('STANDARD_SYNC')" id="urg-STANDARD_SYNC" class="urg-btn py-2.5 px-3 rounded border border-neonCyan bg-neonCyan/15 text-neonCyan font-bold text-center">
+                                STANDARD_SYNC
+                            </button>
+                            <button type="button" onclick="selectUrgency('PRIORITY_OVERCLOCK')" id="urg-PRIORITY_OVERCLOCK" class="urg-btn py-2.5 px-3 rounded border border-slate-700 bg-void text-slate-300 hover:border-cyberYellow text-center">
+                                PRIORITY_FAST
+                            </button>
+                            <button type="button" onclick="selectUrgency('EXPRESS_WARP_48H')" id="urg-EXPRESS_WARP_48H" class="urg-btn py-2.5 px-3 rounded border border-slate-700 bg-void text-slate-300 hover:border-electricMagenta text-center">
+                                EXPRESS_48H
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Optional Add-On Modules -->
+                    <div>
+                        <label class="block font-mono text-xs text-electricMagenta uppercase mb-2.5">
+                            03 // OPTIONAL_PRODUCTION_MODULES:
+                        </label>
+                        <div class="flex flex-wrap gap-2 font-mono text-xs">
+                            <button type="button" onclick="toggleAddon(this, 'Custom Brand Jingle')" class="addon-chip px-3 py-1.5 rounded border border-slate-700 bg-void text-slate-300 hover:border-cyberYellow transition-all">
+                                + Custom Brand Jingle
+                            </button>
+                            <button type="button" onclick="toggleAddon(this, 'Promotional Scriptwriting')" class="addon-chip px-3 py-1.5 rounded border border-slate-700 bg-void text-slate-300 hover:border-cyberYellow transition-all">
+                                + Promotional Scriptwriting
+                            </button>
+                            <button type="button" onclick="toggleAddon(this, 'Halftone / Paper Cutout Look')" class="addon-chip px-3 py-1.5 rounded border border-slate-700 bg-void text-slate-300 hover:border-cyberYellow transition-all">
+                                + Halftone / Paper Cutout Look
+                            </button>
+                            <button type="button" onclick="toggleAddon(this, 'Veo / Nano Banana AI Visuals')" class="addon-chip px-3 py-1.5 rounded border border-slate-700 bg-void text-slate-300 hover:border-cyberYellow transition-all">
+                                + Veo / Nano Banana AI Visuals
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Sender Coordinates & Notes -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div>
+                            <label class="block font-mono text-[11px] text-slate-400 mb-1">CLIENT_IDENTIFIER (NAME / BRAND):</label>
+                            <input type="text" id="clientNameInput" oninput="updateLiveBriefPreview()" placeholder="e.g. Alex // Apex Brands" class="w-full bg-void border border-slate-700 focus:border-neonCyan rounded px-3 py-2 text-sm text-white font-mono outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-mono text-[11px] text-slate-400 mb-1">RETURN_CHANNEL (EMAIL / HANDLE):</label>
+                            <input type="text" id="clientContactInput" oninput="updateLiveBriefPreview()" placeholder="e.g. alex@studio.io" class="w-full bg-void border border-slate-700 focus:border-neonCyan rounded px-3 py-2 text-sm text-white font-mono outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-mono text-[11px] text-slate-400 mb-1">MISSION_BRIEF_NOTES (SCOPE / DELIVERABLES):</label>
+                        <textarea id="clientNotesInput" rows="3" oninput="updateLiveBriefPreview()" placeholder="Describe your campaign goals, target platform (Reels, YouTube, Ad), or product details..." class="w-full bg-void border border-slate-700 focus:border-neonCyan rounded px-3 py-2 text-sm text-white font-mono outline-none"></textarea>
+                    </div>
+
+                    <!-- Submit / Copy Actions -->
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <button type="button" onclick="transmitSignal()" class="clip-btn bg-cyberYellow hover:bg-neonCyan text-void font-orbitron font-bold text-sm px-6 py-3.5 transition-all flex items-center gap-2 glow-yellow">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            TRANSMIT_ENCRYPTED_BRIEF
+                        </button>
+                        <button type="button" onclick="copyBriefToClipboard()" class="clip-btn bg-void border border-neonCyan/60 hover:bg-neonCyan/20 text-neonCyan font-mono text-xs px-4 py-3.5 transition-all flex items-center gap-2">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            COPY_BRIEF_PACKET
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Live Encrypted Packet Terminal & Direct Uplinks (5 Cols) -->
+                <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+                    <div class="bg-voidPanel border border-cyberYellow/50 clip-card p-6 font-mono text-xs space-y-4 relative">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-cyberYellow font-bold flex items-center gap-2">
+                                <i data-lucide="terminal" class="w-4 h-4"></i>
+                                PACKET_TELEMETRY_PREVIEW
+                            </span>
+                            <span class="text-terminalGreen">ENC: AES-256</span>
+                        </div>
+
+                        <pre id="liveBriefTerminal" class="bg-void p-4 rounded border border-slate-800 text-slate-300 whitespace-pre-wrap leading-relaxed text-[11px] overflow-x-auto"></pre>
+
+                        <!-- Status Toast Box inside Terminal -->
+                        <div id="transmitToast" class="hidden p-3 rounded bg-terminalGreen/15 border border-terminalGreen text-terminalGreen text-xs flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
+                            <span id="transmitToastText">SIGNAL TRANSMITTED & COPIED TO CLIPBOARD!</span>
+                        </div>
+                    </div>
+
+                    <!-- Direct Node Links Card -->
+                    <div class="bg-voidPanel border border-slate-800 clip-card p-6 space-y-4">
+                        <div class="font-mono text-xs text-neonCyan">// DIRECT_COMM_CHANNELS</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+                            <a href="mailto:mohit.visuals@delhi.sector" onclick="copyContactInfo('mohit.visuals@portfolio.in', event)" class="p-3 rounded bg-void border border-slate-800 hover:border-cyberYellow flex items-center gap-2.5 text-slate-200 transition-all">
+                                <i data-lucide="mail" class="w-4 h-4 text-cyberYellow"></i>
+                                <span class="truncate">COPY_EMAIL_ID</span>
+                            </a>
+                            <a href="#project-archives" class="p-3 rounded bg-void border border-slate-800 hover:border-neonCyan flex items-center gap-2.5 text-slate-200 transition-all">
+                                <i data-lucide="film" class="w-4 h-4 text-neonCyan"></i>
+                                <span class="truncate">SHOWREEL_DECK</span>
+                            </a>
+                            <div class="p-3 rounded bg-void border border-slate-800 flex items-center gap-2.5 text-slate-300 sm:col-span-2">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-electricMagenta shrink-0"></i>
+                                <span>BASE_SECTOR: Delhi, India // Available Remote & Worldwide</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-voidLight py-8 px-4 mt-20 font-mono text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-cyberYellow rounded-full"></span>
+                <span class="text-white font-bold">MOHIT.EXE // VISUAL_ARCHITECT</span>
+                <span>— ALL RIGHTS RESERVED</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-neonCyan">28.7041° N, 77.1025° E</span>
+                <span>|</span>
+                <a href="#system-bio" class="hover:text-cyberYellow">TOP_OF_HUD &uarr;</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         DETAILED INTERACTIVE HUD INSPECTION MODAL
+         ========================================== -->
+    <div id="projectModal" class="fixed inset-0 z-50 hidden bg-void/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-voidPanel border-2 border-cyberYellow clip-card w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden glow-yellow my-auto">
+            
+            <!-- Modal Top HUD Bar -->
+            <div class="flex items-center justify-between px-4 sm:px-6 py-3.5 bg-void border-b border-slate-800 font-mono text-xs shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyberYellow animate-pulse"></span>
+                    <span id="modalCodeId" class="text-cyberYellow font-bold">ARCHIVE_INSPECTOR // PRJ_01</span>
+                    <span id="modalCategoryBadge" class="hidden sm:inline-block px-2 py-0.5 bg-neonCyan/15 border border-neonCyan text-neonCyan rounded text-[10px]">CATEGORY</span>
+                </div>
+                <button onclick="closeProjectModal()" class="px-3 py-1 bg-electricMagenta/20 border border-electricMagenta text-electricMagenta hover:bg-electricMagenta hover:text-white rounded font-bold flex items-center gap-1 transition-colors">
+                    <span>ESC // CLOSE</span>
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Modal Scrollable Content -->
+            <div class="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1" id="modalContentContainer">
+                <!-- Populated dynamically when a project card is clicked -->
+            </div>
+
+            <!-- Modal Bottom Status Footer -->
+            <div class="px-5 py-3 bg-void border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 font-mono text-xs shrink-0">
+                <span class="text-slate-400">VERIFIED PRODUCTION FILE // MOHIT_PORTFOLIO_DB</span>
+                <button onclick="jumpToBriefWithProject()" class="px-4 py-1.5 bg-cyberYellow text-void font-bold rounded hover:bg-neonCyan transition-colors">
+                    REQUEST SIMILAR PROJECT &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT ENGINE (AUDIO, CANVASES, MODALS, NLE)
+         ========================================== -->
+    <script>
+        /* ----------------------------------------------------
+           1. WEB AUDIO API SCI-FI UI SYNTHESIZER
+           ---------------------------------------------------- */
+        let audioEnabled = true;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playUISound(type = 'hover') {
+            if (!audioEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'hover') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(920, now);
+                    osc.frequency.exponentialRampToValueAtTime(1320, now + 0.04);
+                    gain.gain.setValueAtTime(0.025, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(520, now);
+                    osc.frequency.exponentialRampToValueAtTime(1180, now + 0.08);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+                    osc.start(now);
+                    osc.stop(now + 0.095);
+                } else if (type === 'modal') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(310, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.14);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.16);
+                } else if (type === 'jingle') {
+                    // Play a snappy 3-note cyberpunk commercial jingle motif
+                    const notes = [440, 554.37, 659.25, 880];
+                    notes.forEach((freq, idx) => {
+                        const o = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        o.connect(g);
+                        g.connect(ctx.destination);
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(freq, now + idx * 0.09);
+                        g.gain.setValueAtTime(0.07, now + idx * 0.09);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.18);
+                        o.start(now + idx * 0.09);
+                        o.stop(now + idx * 0.09 + 0.19);
+                    });
+                }
+            } catch (e) {
+                // Ignore audio context autoplay restrictions before interaction
+            }
+        }
+
+        function toggleAudioSFX() {
+            audioEnabled = !audioEnabled;
+            const label = document.getElementById('audioLabel');
+            const btn = document.getElementById('audioToggleBtn');
+            if (audioEnabled) {
+                label.textContent = 'SFX: ON';
+                btn.classList.add('border-neonCyan/50', 'text-neonCyan');
+                btn.classList.remove('border-slate-700', 'text-slate-500');
+                playUISound('click');
+            } else {
+                label.textContent = 'SFX: OFF';
+                btn.classList.remove('border-neonCyan/50', 'text-neonCyan');
+                btn.classList.add('border-slate-700', 'text-slate-500');
+            }
+        }
+
+        function toggleCRT() {
+            playUISound('click');
+            const overlay = document.getElementById('crtOverlay');
+            const label = document.getElementById('crtLabel');
+            overlay.classList.toggle('crt-off');
+            const isOff = overlay.classList.contains('crt-off');
+            label.textContent = isOff ? 'CRT: OFF' : 'CRT: ON';
+        }
+
+        function toggleMobileMenu() {
+            playUISound('click');
+            const nav = document.getElementById('mobileNav');
+            nav.classList.toggle('hidden');
+        }
+
+        /* ----------------------------------------------------
+           2. LIVE TELEMETRY (CLOCK & FPS COUNTER)
+           ---------------------------------------------------- */
+        function updateClock() {
+            const now = new Date();
+            const options = { timeZone: 'Asia/Kolkata', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const timeString = now.toLocaleTimeString('en-US', options);
+            const el = document.getElementById('liveClock');
+            if (el) el.textContent = `SYS_TIME: ${timeString} IST`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let frameCount = 0;
+        let lastFpsTime = performance.now();
+        function updateFPS(now) {
+            frameCount++;
+            if (now - lastFpsTime >= 1000) {
+                const fpsEl = document.getElementById('fpsCounter');
+                if (fpsEl) fpsEl.textContent = Math.min(60, Math.max(57, frameCount));
+                frameCount = 0;
+                lastFpsTime = now;
+            }
+            requestAnimationFrame(updateFPS);
+        }
+
+        /* ----------------------------------------------------
+           3. HERO SHOWREEL MONITOR CANVAS ENGINE
+           ---------------------------------------------------- */
+        let heroPlaying = true;
+        let heroProgress = 42; // 0 to 100
+        let heroLayerMode = 'VFX_COMP'; // 'RAW_CUT' | 'VFX_COMP' | 'HALFTONE_GRADE'
+
+        function setHeroLayerMode(mode) {
+            playUISound('click');
+            heroLayerMode = mode;
+            document.getElementById('heroModeBadge').textContent = `LAYER: ${mode}`;
+            
+            const buttons = {
+                'RAW_CUT': document.getElementById('heroBtnRaw'),
+                'VFX_COMP': document.getElementById('heroBtnVfx'),
+                'HALFTONE_GRADE': document.getElementById('heroBtnHalftone')
+            };
+            Object.keys(buttons).forEach(k => {
+                if (k === mode) {
+                    buttons[k].className = 'py-1.5 px-2 rounded border border-neonCyan bg-neonCyan/20 text-neonCyan font-bold transition-all';
+                } else {
+                    buttons[k].className = 'py-1.5 px-2 rounded border border-slate-700 bg-void text-slate-400 hover:text-white transition-all';
+                }
+            });
+        }
+
+        function toggleHeroPlayback() {
+            playUISound('click');
+            heroPlaying = !heroPlaying;
+            const btn = document.getElementById('heroPlayBtn');
+            btn.innerHTML = heroPlaying 
+                ? '<i data-lucide="pause" class="w-4 h-4"></i>' 
+                : '<i data-lucide="play" class="w-4 h-4"></i>';
+            lucide.createIcons();
+        }
+
+        function scrubHeroMonitor(val) {
+            heroProgress = parseFloat(val);
+            updateHeroTimecode();
+        }
+
+        function updateHeroTimecode() {
+            const totalFrames = Math.floor((heroProgress / 100) * 900);
+            const secs = String(Math.floor(totalFrames / 60)).padStart(2, '0');
+            const frames = String(totalFrames % 60).padStart(2, '0');
+            const tcEl = document.getElementById('heroTimecode');
+            if (tcEl) tcEl.textContent = `00:00:${secs}:${frames}`;
+        }
+
+        function renderHeroCanvas() {
+            const canvas = document.getElementById('heroShowreelCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            if (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height)) {
+                canvas.width = Math.max(300, Math.floor(rect.width));
+                canvas.height = Math.max(225, Math.floor(rect.height));
+            }
+
+            const w = canvas.width;
+            const h = canvas.height;
+            if (heroPlaying) {
+                heroProgress = (heroProgress + 0.18) % 100;
+                const scrubber = document.getElementById('heroScrubber');
+                if (scrubber) scrubber.value = heroProgress;
+                updateHeroTimecode();
+            }
+
+            const t = heroProgress * 0.0628; // 0 to 2PI
+
+            // Background clear
+            ctx.fillStyle = heroLayerMode === 'RAW_CUT' ? '#10121a' : '#07070c';
+            ctx.fillRect(0, 0, w, h);
+
+            // Grid lines
+            ctx.strokeStyle = heroLayerMode === 'RAW_CUT' ? 'rgba(255,255,255,0.06)' : 'rgba(0, 240, 255, 0.12)';
+            ctx.lineWidth = 1;
+            const step = 32;
+            for (let x = 0; x < w; x += step) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+            for (let y = 0; y < h; y += step) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            // Halftone Risograph Dot Matrix if HALFTONE_GRADE or VFX_COMP
+            if (heroLayerMode === 'HALFTONE_GRADE' || heroLayerMode === 'VFX_COMP') {
+                ctx.fillStyle = heroLayerMode === 'HALFTONE_GRADE' ? 'rgba(252, 238, 10, 0.22)' : 'rgba(255, 0, 60, 0.12)';
+                for (let x = 12; x < w; x += 16) {
+                    for (let y = 12; y < h; y += 16) {
+                        const r = 1.5 + Math.sin(x * 0.03 + t) * 1.1;
+                        if (r > 0.5) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, r, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+            }
+
+            // Paper Cutout Collage Shape in center
+            ctx.save();
+            ctx.translate(w * 0.5, h * 0.46);
+            const cutAngle = Math.sin(t * 2) * 0.08;
+            ctx.rotate(cutAngle);
+
+            // Paper shadow/border (tactile cutout look)
+            if (heroLayerMode !== 'RAW_CUT') {
+                ctx.fillStyle = '#fcee0a';
+                ctx.beginPath();
+                ctx.moveTo(-95, -52);
+                ctx.lineTo(88, -60);
+                ctx.lineTo(105, 45);
+                ctx.lineTo(-82, 58);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            ctx.fillStyle = heroLayerMode === 'RAW_CUT' ? '#262936' : '#ff003c';
+            ctx.beginPath();
+            ctx.moveTo(-90, -46);
+            ctx.lineTo(82, -52);
+            ctx.lineTo(96, 40);
+            ctx.lineTo(-76, 50);
+            ctx.closePath();
+            ctx.fill();
+
+            // Kinetic Typography inside Monitor
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `900 ${Math.floor(w * 0.065)}px Orbitron, sans-serif`;
+            ctx.textAlign = 'center';
+            const words = ['KINETIC_REELS', 'COMMERCIAL_ADS', 'AI_VEO_VISUALS', 'UI_UX_SYSTEMS'];
+            const wordIdx = Math.floor((heroProgress / 25)) % words.length;
+            ctx.fillText(words[wordIdx], 0, 6);
+
+            ctx.font = `700 ${Math.floor(w * 0.032)}px "Share Tech Mono", monospace`;
+            ctx.fillStyle = '#00f0ff';
+            ctx.fillText('// MOTION_CURVE: BEZIER_SYNC', 0, 28);
+            ctx.restore();
+
+            // Speed Graph Bezier Wave at bottom of monitor
+            ctx.beginPath();
+            ctx.strokeStyle = heroLayerMode === 'HALFTONE_GRADE' ? '#fcee0a' : '#00ff66';
+            ctx.lineWidth = 2.5;
+            for (let x = 20; x < w - 20; x += 6) {
+                const norm = (x - 20) / (w - 40);
+                const y = h * 0.82 + Math.sin(norm * Math.PI * 4 + t * 3) * 14 * Math.sin(norm * Math.PI);
+                if (x === 20) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Playhead vertical line
+            const playX = 20 + (heroProgress / 100) * (w - 40);
+            ctx.strokeStyle = '#fcee0a';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(playX, 0);
+            ctx.lineTo(playX, h);
+            ctx.stroke();
+
+            requestAnimationFrame(renderHeroCanvas);
+        }
+
+        /* ----------------------------------------------------
+           4. TECHNICAL ARSENAL FILTERING
+           ---------------------------------------------------- */
+        function filterArsenal(category) {
+            playUISound('click');
+            const tabs = ['ALL', 'VIDEO', 'AI', 'UIUX'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`arsenalTab-${t}`);
+                if (t === category) {
+                    btn.className = 'arsenal-tab px-3.5 py-2 clip-tab bg-cyberYellow text-void font-bold transition-all';
+                } else {
+                    btn.className = 'arsenal-tab px-3.5 py-2 clip-tab bg-voidPanel border border-slate-700 text-slate-300 hover:border-neonCyan transition-all';
+                }
+            });
+
+            const cards = document.querySelectorAll('[data-arsenal-cat]');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-arsenal-cat');
+                if (category === 'ALL' || cardCat === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        /* ----------------------------------------------------
+           5. PROJECT ARCHIVES DATA & MODAL SYSTEM
+           (Includes full 16-Slide ThriftEase Explorer)
+           ---------------------------------------------------- */
+        const thriftEaseSlides = [
+            { num: '01/16', title: 'COVER // THRIFTEASE MOBILE ECOSYSTEM', subtitle: 'Reimagining Circular Fashion & Secondhand Commerce', metric: 'ROLE: Lead UI/UX Designer', body: 'End-to-end mobile application design for buying, selling, and tracking pre-loved thrifted apparel and accessories with zero friction.', uiType: 'SPLASH' },
+            { num: '02/16', title: 'PROBLEM STATEMENT // THE THRIFT FRICTION', subtitle: 'Why Gen-Z & Millennial Thrifting Breaks on Social DMs', metric: 'PAIN_INDEX: 78% Drop-off in DM Checkout', body: 'Thrift buyers struggle with unverified sizing, ghosted Instagram DMs, lack of buyer protection, and fragmented manual payment links.', uiType: 'PROBLEM' },
+            { num: '03/16', title: 'USER RESEARCH & QUANTITATIVE SURVEYS', subtitle: 'Insights from 45+ Active Thrift Buyers & Closet Sellers', metric: '84% Demand Instant Order Tracking', body: 'Conducted structured interviews discovering that sellers spend 3+ hours manually answering measurement queries while buyers crave standardized condition badges.', uiType: 'RESEARCH' },
+            { num: '04/16', title: 'USER PERSONAS // BUYER & SELLER ARCHETYPES', subtitle: 'Aarav (Streetwear Collector) & Meera (Indie Closet Curator)', metric: '2 CORE PERSONA PROFILES', body: 'Mapped behavioral motivations, frustrations, and digital habits for both high-frequency campus sellers and budget-conscious vintage hunters.', uiType: 'PERSONA' },
+            { num: '05/16', title: 'COMPETITIVE AUDIT & MARKET GAP MATRIX', subtitle: 'Benchmarking Social Marketplaces vs Dedicated Resell Apps', metric: 'GAP: Fast 60-Sec Listing + Escrow', body: 'Evaluated existing platforms across trust signals, listing speed, fee transparency, and shipment tracking to position ThriftEase.', uiType: 'AUDIT' },
+            { num: '06/16', title: 'INFORMATION ARCHITECTURE & USER FLOW', subtitle: 'Unified Dual-Role Navigation (Buyer <-> Seller Switch)', metric: 'MAX 3 TAPS TO CHECKOUT', body: 'Architected a streamlined bottom-tab hierarchy: Explore Feed, Style Filters, 60-Second Camera List, Live Order Radar, and Vault Profile.', uiType: 'FLOW' },
+            { num: '07/16', title: 'LOW-FIDELITY WIREFRAMES & RAPID SKETCHES', subtitle: 'Validating Card Density & Thumb-Zone Ergonomics', metric: '24 WIREFRAME SCREENS', body: 'Iterated on product card ratios so garment condition tags, exact chest/length measurements, and price drops are readable at a glance.', uiType: 'WIREFRAME' },
+            { num: '08/16', title: 'VISUAL DESIGN SYSTEM & TYPOGRAPHY TOKENS', subtitle: 'Tactile Neo-Brutalist + Clean Editorial Mobile UI', metric: 'WCAG AA CONTRAST COMPLIANT', body: 'Created reusable component tokens: Condition Badges (Mint, Gently Used, Vintage Fade), Price Offer Chips, and Dark/Light adaptive surfaces.', uiType: 'SYSTEM' },
+            { num: '09/16', title: 'ONBOARDING & STYLE DNA PERSONALIZATION', subtitle: 'Interactive Aesthetic Quiz (Y2K, Gorpcore, Streetwear, Indie)', metric: '+42% FEED RELEVANCE', body: 'New users select their exact garment measurements once and pick 3 aesthetic tags so the home feed immediately surfaces fitting pieces.', uiType: 'ONBOARD' },
+            { num: '10/16', title: 'HOME & CURATED DISCOVERY FEED UI', subtitle: 'Smart Fit-Match Filter + Video Try-On Previews', metric: 'AUTO-FILTER BY MY SIZE', body: 'Features a toggleable "My Size Only" switch, instant bookmarking, and verified seller trust scores directly on every feed card.', uiType: 'FEED' },
+            { num: '11/16', title: 'PRODUCT DETAIL & AUTHENTICITY VIEW', subtitle: 'Flaw Disclosure Pinpoints + Make-an-Offer Slider', metric: 'ZERO SURPRISE DEFECTS', body: 'Sellers pin exact fabric wear spots on photos; buyers can either "Buy Now" or slide to send an instant binding counter-offer.', uiType: 'PDP' },
+            { num: '12/16', title: '60-SECOND SELLER LISTING WORKFLOW', subtitle: 'AI Background Clean + Auto-Tagging Garment Category', metric: 'LISTING TIME: < 55 SECS', body: 'Guided 3-step camera capture (Front, Back, Label/Tag) with one-tap measurement presets and automated shipping label generation.', uiType: 'SELLER' },
+            { num: '13/16', title: 'ESCROW CART & SECURE CHECKOUT', subtitle: 'UPI / Card Integration with Buyer Protection Hold', metric: '100% ESCROW PROTECTED', body: 'Funds are securely held until the courier scan confirms delivery and the buyer verifies item condition within a 48-hour window.', uiType: 'CART' },
+            { num: '14/16', title: 'LIVE ORDER TRACKING & COURIER TELEMETRY', subtitle: 'Real-Time Package Checkpoints from Closet to Doorstep', metric: '5 LIVE TRACKING NODES', body: 'Interactive shipment timeline showing Packed by Seller, Pickup Scanned, In-Transit Hub, Out for Delivery, and Verified Delivered.', uiType: 'TRACKING' },
+            { num: '15/16', title: 'USABILITY TESTING & ITERATION LOGS', subtitle: 'Refining Offer Negotiation & Size Chart Clarity', metric: '94% TASK COMPLETION RATE', body: 'Tested clickable prototypes with 12 participants; simplified measurement input from manual typing to visual garment sliders.', uiType: 'TESTING' },
+            { num: '16/16', title: 'FINAL IMPACT & NEXT-PHASE ROADMAP', subtitle: 'Complete 16-Slide Case Study Summary & Prototype Metrics', metric: '4.9/5 PROTOTYPE USABILITY SCORE', body: 'ThriftEase bridges community trust and e-commerce speed, reducing listing time by 65% and giving buyers complete tracking transparency.', uiType: 'IMPACT' }
+        ];
+
+        const projectsData = [
+            {
+                id: 'MONITRAQ',
+                code: 'ARC_01 // COMMERCIAL_CAMPAIGN',
+                title: 'MONITRAQ // HEALTH PLATFORM CAMPAIGN',
+                category: 'COMMERCIAL & MOTION',
+                accent: 'neonCyan',
+                summary: 'End-to-end promotional video scripts, dynamic motion graphics, and custom Hindi/Hinglish family-centric audio jingles crafted for the Monitraq health platform.',
+                tags: ['After Effects', 'Premiere Pro', 'Scriptwriting', 'Audio Jingle', 'Motion Graphics'],
+                deliverables: ['3x Commercial Video Cuts (16:9 & 9:16)', 'Original Hindi/Hinglish Family Jingle', 'Custom Motion UI Callouts & Health Telemetry Overlays', 'Full Bilingual Promotional Script'],
+                interactiveType: 'MONITRAQ_SIM',
+                scriptLines: [
+                    { time: '00:00 - 00:04', visual: 'Kinetic Hook: Family health alerts popping up in clean glassmorphic HUD cards.', audio: '🎵 "Apno ki sehat ka har pal dhyan, Monitraq banaye zindagi aasan!"' },
+                    { time: '00:04 - 00:10', visual: 'After Effects split-screen transition showing vitals tracking & instant doctor sync.', audio: 'VO (Hinglish): "Sugar ho ya BP track karna, ab parents ki health updates seedha aapke phone par."' },
+                    { time: '00:10 - 00:15', visual: 'Logo sonic slam + animated CTA badge with app download callout.', audio: '🎵 "Monitraq Health — Care jo kabhi ruke nahi!"' }
+                ]
+            },
+            {
+                id: 'DUKOLL',
+                code: 'ARC_02 // BRAND_COMMERCIAL',
+                title: 'DUKOLL // COMMERCIAL AD & JINGLE',
+                category: 'COMMERCIAL & MOTION',
+                accent: 'cyberYellow',
+                summary: 'High-energy promotional video production, motion design assets, and custom brand jingle for Dukoll tile adhesives and building products.',
+                tags: ['Commercial Edit', 'Motion Graphics', 'Brand Jingle', 'Visual Storytelling'],
+                deliverables: ['High-Impact Master Commercial Ad', 'Custom Catchy Brand Jingle Audio', '3D-Style Product Callout Graphics & Strength Badges', 'Dealer & Social Reels Cutdowns'],
+                interactiveType: 'DUKOLL_SIM',
+                scriptLines: [
+                    { time: '00:00 - 00:03', visual: 'Rapid percussive cut: Heavy tiles locking into place with neon shockwave outlines.', audio: '🎵 "Mazbooti ka pakka jod — DUKOLL!"' },
+                    { time: '00:03 - 00:09', visual: 'Kinetic typography highlighting waterproof bond, zero-slip grip, and long-lasting durability.', audio: 'VO: "Har weather, har surface par de bejod pakad. Dukoll Tile Adhesives & Building Solutions."' },
+                    { time: '00:09 - 00:14', visual: 'Product lineup showcase with dynamic shine sweeps & sonic brand signature.', audio: '🎵 "Dukoll lagao, saalon-saal nishchint ho jao!"' }
+                ]
+            },
+            {
+                id: 'THRIFTEASE',
+                code: 'ARC_03 // FULL_UX_DECK',
+                title: 'THRIFTEASE // 16-SLIDE UI/UX CASE STUDY',
+                category: 'UI/UX CASE STUDY',
+                accent: 'electricMagenta',
+                summary: 'Complete mobile application UI/UX case study for buying, selling, and tracking thrifted clothes and accessories. Includes an interactive 16-slide explorer.',
+                tags: ['Mobile UI/UX', '16-Slide Case Study', 'App Design', 'E-Commerce Flow'],
+                deliverables: ['16-Slide Comprehensive UX Case Study Deck', 'User Personas, Competitive Audit & IA Flow', 'High-Fidelity Listing, Purchasing & Live Order Tracking Screens', 'Design System & Interactive Prototype'],
+                interactiveType: 'THRIFTEASE_16_SLIDES'
+            },
+            {
+                id: 'KINETIC_TYPO',
+                code: 'ARC_04 // SOCIAL_REELS_ENGINE',
+                title: 'KINETIC_TYPO // SHORT-FORM REELS ENGINE',
+                category: 'COMMERCIAL & MOTION',
+                accent: 'terminalGreen',
+                summary: 'High-retention social media reels leveraging kinetic typography, strict visual hierarchy, dynamic caption styling, and custom speed-graph motion curves.',
+                tags: ['After Effects', 'Premiere Pro', 'Kinetic Typography', 'Social Reels'],
+                deliverables: ['High-Retention 9:16 Vertical Reels Templates & Edits', 'Custom After Effects Bezier Speed-Graph Curves', 'Dynamic Word-by-Word Emphasis & Visual Hierarchy System', 'SFX Riser, Whoosh & Sub-Bass Impact Sync'],
+                interactiveType: 'KINETIC_SIM'
+            },
+            {
+                id: 'RISO_CUTOUT',
+                code: 'ARC_05 // AI_MIXED_MEDIA',
+                title: 'RISO_CUTOUT // AI & HALFTONE VISUAL SERIES',
+                category: 'AI & COLLAGE',
+                accent: 'cyberYellow',
+                summary: 'Experimental mixed-media commercial concepts combining tactile paper-cutout assets, halftone & risograph textures, and generative AI product animations built with Veo, Nano Banana, and Omni Flash.',
+                tags: ['Veo', 'Nano Banana', 'Omni Flash', 'Halftone Collage', 'Paper Cutout'],
+                deliverables: ['Generative AI Product Motion Plates (Veo / Nano Banana / Omni Flash)', 'Tactile Paper-Cutout Stop-Motion Compositing', 'Risograph Ink Bleed & Halftone Dot Shaders', 'Mixed-Media Brand Concept Visuals'],
+                interactiveType: 'RISO_SIM'
+            }
+        ];
+
+        let currentProjectFilter = 'ALL';
+        let activeModalProject = null;
+        let currentThriftSlideIndex = 0;
+
+        function renderProjectsGrid() {
+            const grid = document.getElementById('projectsGrid');
+            if (!grid) return;
+
+            const filtered = currentProjectFilter === 'ALL'
+                ? projectsData
+                : projectsData.filter(p => p.category === currentProjectFilter);
+
+            grid.innerHTML = filtered.map((proj, idx) => {
+                const borderColors = {
+                    neonCyan: 'border-neonCyan/50 hover:border-neonCyan',
+                    cyberYellow: 'border-cyberYellow/50 hover:border-cyberYellow',
+                    electricMagenta: 'border-electricMagenta/50 hover:border-electricMagenta',
+                    terminalGreen: 'border-terminalGreen/50 hover:border-terminalGreen'
+                };
+                const badgeColors = {
+                    neonCyan: 'text-neonCyan border-neonCyan/40 bg-neonCyan/10',
+                    cyberYellow: 'text-cyberYellow border-cyberYellow/40 bg-cyberYellow/10',
+                    electricMagenta: 'text-electricMagenta border-electricMagenta/40 bg-electricMagenta/10',
+                    terminalGreen: 'text-terminalGreen border-terminalGreen/40 bg-terminalGreen/10'
+                };
+
+                return `
+                    <article onclick="openProjectModal('${proj.id}')" class="bg-voidPanel border ${borderColors[proj.accent]} clip-card p-5 flex flex-col justify-between cursor-pointer group transition-all hover:-translate-y-1">
+                        <div>
+                            <!-- Top Card Telemetry -->
+                            <div class="flex items-center justify-between gap-2 font-mono text-[11px] mb-3">
+                                <span class="text-slate-400">${proj.code}</span>
+                                <span class="px-2 py-0.5 border rounded ${badgeColors[proj.accent]}">${proj.category}</span>
+                            </div>
+
+                            <!-- Custom Visual SVG Artwork Header per Card -->
+                            <div class="h-36 bg-void border border-slate-800 rounded mb-4 relative overflow-hidden flex items-center justify-center p-4 group-hover:border-slate-600 transition-all halftone-bg">
+                                ${getProjectCardGraphic(proj)}
+                                <div class="absolute bottom-2 right-2 px-2 py-0.5 bg-void/90 border border-slate-700 font-mono text-[10px] text-cyberYellow rounded flex items-center gap-1">
+                                    <span>CLICK_TO_INSPECT</span>
+                                    <span>&rarr;</span>
+                                </div>
+                            </div>
+
+                            <h3 class="font-orbitron font-bold text-lg text-white group-hover:text-cyberYellow transition-colors mb-2">
+                                ${proj.title}
+                            </h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                                ${proj.summary}
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flex flex-wrap gap-1.5 pt-3 border-t border-slate-800/80 font-mono text-[11px]">
+                                ${proj.tags.map(t => `<span class="px-2 py-0.5 bg-void border border-slate-800 text-slate-300 rounded">${t}</span>`).join('')}
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function getProjectCardGraphic(proj) {
+            if (proj.id === 'MONITRAQ') {
+                return `
+                    <div class="text-center space-y-1">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-neonCyan/20 border border-neonCyan text-neonCyan font-orbitron font-bold text-xs rounded">
+                            <span>♥ MONITRAQ HEALTH HUD</span>
+                        </div>
+                        <div class="font-mono text-[11px] text-slate-300">SCRIPT + MOTION + FAMILY JINGLE</div>
+                    </div>
+                `;
+            } else if (proj.id === 'DUKOLL') {
+                return `
+                    <div class="text-center space-y-1">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-cyberYellow/20 border border-cyberYellow text-cyberYellow font-orbitron font-bold text-xs rounded">
+                            <span>◆ DUKOLL AD & SONIC JINGLE</span>
+                        </div>
+                        <div class="font-mono text-[11px] text-slate-300">TILE ADHESIVE COMMERCIAL EDIT</div>
+                    </div>
+                `;
+            } else if (proj.id === 'THRIFTEASE') {
+                return `
+                    <div class="text-center space-y-1">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-electricMagenta/20 border border-electricMagenta text-electricMagenta font-orbitron font-bold text-xs rounded">
+                            <span>📱 16-SLIDE INTERACTIVE UX DECK</span>
+                        </div>
+                        <div class="font-mono text-[11px] text-slate-300">BUY // SELL // TRACK THRIFT APP</div>
+                    </div>
+                `;
+            } else if (proj.id === 'KINETIC_TYPO') {
+                return `
+                    <div class="text-center space-y-1">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-terminalGreen/20 border border-terminalGreen text-terminalGreen font-orbitron font-bold text-xs rounded">
+                            <span>⚡ KINETIC REELS & SPEED GRAPHS</span>
+                        </div>
+                        <div class="font-mono text-[11px] text-slate-300">VISUAL HIERARCHY // 9:16 HOOKS</div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="text-center space-y-1">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-cyberYellow/20 border border-cyberYellow text-cyberYellow font-orbitron font-bold text-xs rounded">
+                            <span>✂ VEO + NANO BANANA + RISO</span>
+                        </div>
+                        <div class="font-mono text-[11px] text-slate-300">PAPER CUTOUT & HALFTONE AI</div>
+                    </div>
+                `;
+            }
+        }
+
+        function filterProjects(category) {
+            playUISound('click');
+            currentProjectFilter = category;
+            const mapIds = {
+                'ALL': 'projFilter-ALL',
+                'COMMERCIAL & MOTION': 'projFilter-COMMERCIAL',
+                'AI & COLLAGE': 'projFilter-AI',
+                'UI/UX CASE STUDY': 'projFilter-UIUX'
+            };
+            Object.keys(mapIds).forEach(cat => {
+                const btn = document.getElementById(mapIds[cat]);
+                if (cat === category) {
+                    btn.className = 'proj-filter-btn px-3.5 py-2 clip-tab bg-neonCyan text-void font-bold transition-all';
+                } else {
+                    btn.className = 'proj-filter-btn px-3.5 py-2 clip-tab bg-voidPanel border border-slate-700 text-slate-300 hover:border-cyberYellow transition-all';
+                }
+            });
+            renderProjectsGrid();
+        }
+
+        function openProjectModal(projectId) {
+            playUISound('modal');
+            const proj = projectsData.find(p => p.id === projectId);
+            if (!proj) return;
+            activeModalProject = proj;
+
+            document.getElementById('modalCodeId').textContent = proj.code;
+            document.getElementById('modalCategoryBadge').textContent = proj.category;
+
+            const container = document.getElementById('modalContentContainer');
+
+            // Render custom interactive experience based on project
+            let interactiveHTML = '';
+
+            if (proj.interactiveType === 'THRIFTEASE_16_SLIDES') {
+                currentThriftSlideIndex = 0;
+                interactiveHTML = getThriftEaseExplorerHTML();
+            } else if (proj.interactiveType === 'MONITRAQ_SIM' || proj.interactiveType === 'DUKOLL_SIM') {
+                interactiveHTML = `
+                    <div class="bg-void border border-neonCyan/40 rounded p-4 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2 font-mono text-xs">
+                            <span class="text-cyberYellow font-bold">// INTERACTIVE SCRIPT & JINGLE TIMELINE BREAKDOWN</span>
+                            <button onclick="playUISound('jingle')" class="px-3 py-1 bg-cyberYellow text-void font-bold rounded hover:bg-neonCyan transition-colors">
+                                ▶ AUDITION SYNTH JINGLE MOTIF
+                            </button>
+                        </div>
+                        <div class="space-y-3 font-mono text-xs">
+                            ${proj.scriptLines.map((line, i) => `
+                                <div class="p-3 bg-voidPanel border border-slate-800 rounded grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                                    <div class="md:col-span-2 text-neonCyan font-bold">${line.time}</div>
+                                    <div class="md:col-span-5 text-slate-200"><span class="text-slate-500">VISUAL:</span> ${line.visual}</div>
+                                    <div class="md:col-span-5 text-cyberYellow bg-void p-2 rounded border border-cyberYellow/30">${line.audio}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (proj.interactiveType === 'KINETIC_SIM') {
+                interactiveHTML = `
+                    <div class="bg-void border border-terminalGreen/40 rounded p-4 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-xs border-b border-slate-800 pb-2">
+                            <span class="text-terminalGreen font-bold">// INTERACTIVE KINETIC TYPOGRAPHY & CURVE TESTER</span>
+                            <div class="flex gap-2">
+                                <button onclick="setKineticPreset('SLAM')" class="px-2.5 py-1 bg-terminalGreen text-void font-bold rounded">PRESET: HARD_SLAM</button>
+                                <button onclick="setKineticPreset('WHIP')" class="px-2.5 py-1 bg-voidPanel border border-neonCyan text-neonCyan rounded">PRESET: ELASTIC_WHIP</button>
+                            </div>
+                        </div>
+                        <div id="kineticPreviewStage" class="p-6 bg-voidPanel border border-slate-800 rounded text-center space-y-2">
+                            <div id="kineticPreviewWord" class="font-orbitron font-black text-3xl sm:text-5xl text-cyberYellow tracking-tight transition-all duration-300">
+                                STOP SCROLLING // WATCH THIS
+                            </div>
+                            <div class="font-mono text-xs text-neonCyan">HIERARCHY_LEVEL_01: PRIMARY HOOK // CUBIC-BEZIER(0.16, 1, 0.3, 1)</div>
+                        </div>
+                    </div>
+                `;
+            } else if (proj.interactiveType === 'RISO_SIM') {
+                interactiveHTML = `
+                    <div class="bg-void border border-cyberYellow/40 rounded p-4 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-xs border-b border-slate-800 pb-2">
+                            <span class="text-cyberYellow font-bold">// MIXED-MEDIA AI + PAPER CUTOUT COMPOSITE INSPECTOR</span>
+                            <span class="text-neonCyan">PIPELINE: VEO + NANO BANANA + OMNI FLASH</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+                            <div class="p-3 bg-voidPanel border border-cyberYellow/40 rounded">
+                                <div class="text-cyberYellow font-bold mb-1">PASS 01 // AI BASE PLATE</div>
+                                <p class="text-slate-400">Dynamic camera orbit & product animation synthesized via Veo, Nano Banana & Omni Flash.</p>
+                            </div>
+                            <div class="p-3 bg-voidPanel border border-electricMagenta/40 rounded halftone-bg">
+                                <div class="text-electricMagenta font-bold mb-1">PASS 02 // PAPER CUTOUT</div>
+                                <p class="text-slate-300">Tactile torn-edge mattes animated at 12fps stop-motion cadence with realistic drop shadows.</p>
+                            </div>
+                            <div class="p-3 bg-voidPanel border border-neonCyan/40 rounded">
+                                <div class="text-neonCyan font-bold mb-1">PASS 03 // RISOGRAPH GRADE</div>
+                                <p class="text-slate-400">CMYK halftone dot matrix separation & analog print grain overlay in After Effects.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="space-y-2">
+                    <h2 class="font-orbitron font-black text-2xl sm:text-3xl text-white">${proj.title}</h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">${proj.summary}</p>
+                </div>
+
+                ${interactiveHTML}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                    <div class="bg-void p-4 rounded border border-slate-800">
+                        <div class="font-mono text-xs text-neonCyan mb-2.5">// KEY_DELIVERABLES</div>
+                        <ul class="space-y-2 text-sm text-slate-300 font-mono">
+                            ${proj.deliverables.map(d => `<li class="flex items-start gap-2"><span class="text-cyberYellow">&gt;</span><span>${d}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="bg-void p-4 rounded border border-slate-800">
+                        <div class="font-mono text-xs text-electricMagenta mb-2.5">// TOOLS_&_TECH_STACK</div>
+                        <div class="flex flex-wrap gap-2 font-mono text-xs">
+                            ${proj.tags.map(t => `<span class="px-3 py-1.5 bg-voidPanel border border-slate-700 text-white rounded">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('projectModal').classList.remove('hidden');
+            lucide.createIcons();
+            if (proj.interactiveType === 'THRIFTEASE_16_SLIDES') {
+                renderThriftSlide(0);
+            }
+        }
+
+        function setKineticPreset(mode) {
+            playUISound('click');
+            const word = document.getElementById('kineticPreviewWord');
+            if (!word) return;
+            if (mode === 'SLAM') {
+                word.textContent = 'HIGH-RETENTION // 98% HOOK';
+                word.className = 'font-orbitron font-black text-3xl sm:text-5xl text-cyberYellow tracking-tight scale-105 transition-all duration-150';
+            } else {
+                word.textContent = 'SPEED_GRAPH // BEZIER FLOW';
+                word.className = 'font-orbitron font-black text-3xl sm:text-5xl text-neonCyan tracking-widest -skew-x-6 transition-all duration-300';
+            }
+        }
+
+        function getThriftEaseExplorerHTML() {
+            return `
+                <div class="bg-void border-2 border-electricMagenta/60 rounded p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3 font-mono text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-electricMagenta text-white font-bold rounded">INTERACTIVE 16-SLIDE UX EXPLORER</span>
+                            <span id="thriftSlideNumber" class="text-cyberYellow font-bold">SLIDE 01/16</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeThriftSlide(-1)" class="px-3 py-1 bg-voidPanel border border-slate-700 hover:border-neonCyan text-white rounded">&larr; PREV</button>
+                            <button onclick="changeThriftSlide(1)" class="px-3 py-1 bg-cyberYellow text-void font-bold rounded hover:bg-neonCyan">NEXT SLIDE &rarr;</button>
+                        </div>
+                    </div>
+
+                    <!-- Slide Main Display -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-2">
+                        <!-- Slide Text Breakdown (7 Cols) -->
+                        <div class="lg:col-span-7 space-y-3">
+                            <div id="thriftSlideMetric" class="inline-block font-mono text-xs px-2.5 py-1 bg-neonCyan/15 border border-neonCyan text-neonCyan rounded"></div>
+                            <h3 id="thriftSlideTitle" class="font-orbitron font-bold text-xl sm:text-2xl text-white"></h3>
+                            <div id="thriftSlideSubtitle" class="font-mono text-xs text-cyberYellow"></div>
+                            <p id="thriftSlideBody" class="text-slate-300 text-sm sm:text-base leading-relaxed pt-1"></p>
+                        </div>
+
+                        <!-- Interactive Mobile Screen Mockup (5 Cols) -->
+                        <div class="lg:col-span-5 flex justify-center">
+                            <div id="thriftPhoneMockup" class="w-full max-w-[260px] bg-voidPanel border-2 border-slate-700 rounded-2xl p-3 space-y-2.5 font-mono text-[11px] shadow-lg">
+                                <!-- Dynamic Mobile UI Screen Preview -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 16-Slide Quick Jump Pills -->
+                    <div class="pt-3 border-t border-slate-800 flex flex-wrap gap-1.5 font-mono text-[10px]" id="thriftSlideDots">
+                        ${thriftEaseSlides.map((s, idx) => `
+                            <button onclick="renderThriftSlide(${idx})" id="thriftDot-${idx}" class="px-2 py-1 rounded border border-slate-800 bg-voidPanel text-slate-400 hover:text-white">
+                                ${String(idx + 1).padStart(2, '0')}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeThriftSlide(delta) {
+            playUISound('click');
+            const next = (currentThriftSlideIndex + delta + thriftEaseSlides.length) % thriftEaseSlides.length;
+            renderThriftSlide(next);
+        }
+
+        function renderThriftSlide(idx) {
+            currentThriftSlideIndex = idx;
+            const slide = thriftEaseSlides[idx];
+            if (!slide) return;
+
+            document.getElementById('thriftSlideNumber').textContent = `SLIDE ${slide.num}`;
+            document.getElementById('thriftSlideMetric').textContent = slide.metric;
+            document.getElementById('thriftSlideTitle').textContent = slide.title;
+            document.getElementById('thriftSlideSubtitle').textContent = slide.subtitle;
+            document.getElementById('thriftSlideBody').textContent = slide.body;
+
+            // Update active slide button highlight
+            thriftEaseSlides.forEach((_, i) => {
+                const dot = document.getElementById(`thriftDot-${i}`);
+                if (dot) {
+                    dot.className = i === idx
+                        ? 'px-2 py-1 rounded border border-cyberYellow bg-cyberYellow text-void font-bold'
+                        : 'px-2 py-1 rounded border border-slate-800 bg-voidPanel text-slate-400 hover:text-white';
+                }
+            });
+
+            // Update Mobile UI Mockup preview
+            const phone = document.getElementById('thriftPhoneMockup');
+            if (phone) {
+                phone.innerHTML = `
+                    <div class="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800 pb-1.5">
+                        <span>THRIFTEASE_OS</span>
+                        <span class="text-terminalGreen">● 5G</span>
+                    </div>
+                    <div class="p-2.5 bg-void rounded border border-electricMagenta/40 space-y-2">
+                        <div class="text-cyberYellow font-bold truncate">${slide.uiType} // VIEW_0${idx + 1}</div>
+                        <div class="h-20 bg-voidPanel rounded border border-slate-800 p-2 flex flex-col justify-between">
+                            <span class="text-[10px] text-neonCyan">VERIFIED_THRIFT_ITEM #40${idx}</span>
+                            <span class="text-white font-bold text-xs">₹1,290 // MINT_COND</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] text-slate-300 pt-1">
+                            <span class="px-1.5 py-0.5 bg-terminalGreen/20 text-terminalGreen rounded">FIT: M (40")</span>
+                            <span class="px-1.5 py-0.5 bg-electricMagenta/20 text-electricMagenta rounded">ESCROW_SAFE</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function closeProjectModal() {
+            playUISound('click');
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+
+        function jumpToBriefWithProject() {
+            if (activeModalProject) {
+                const notes = document.getElementById('clientNotesInput');
+                if (notes) {
+                    notes.value = `Interested in a project similar to [${activeModalProject.title}]. Let's discuss scope and timeline.`;
+                }
+                updateLiveBriefPreview();
+            }
+            closeProjectModal();
+            location.hash = '#transmit';
+        }
+
+        // Close modal on Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeProjectModal();
+        });
+
+        /* ----------------------------------------------------
+           6. INTERACTIVE EDITING TIMELINE SIMULATOR (NLE)
+           ---------------------------------------------------- */
+        let nlePlaying = true;
+        let nleFrame = 108;
+        let nleSpeed = 1.0;
+        let nleSceneIndex = 0;
+        const nleTracks = { V3: true, V2: true, V1: true, A1: true };
+
+        const nleScenes = [
+            { name: 'MONITRAQ_HEALTH_MASTER.PRPROJ', hook: 'MONITRAQ // FAMILY HEALTH SYNC', sub: 'HINDI/HINGLISH JINGLE + AE HUD CALLOUTS', primaryColor: '#00f0ff', secondaryColor: '#fcee0a' },
+            { name: 'DUKOLL_ADHESIVE_COMMERCIAL.AEP', hook: 'DUKOLL // UNBREAKABLE TILE BOND', sub: 'COMMERCIAL AD EDIT + SONIC BRAND JINGLE', primaryColor: '#fcee0a', secondaryColor: '#ff003c' },
+            { name: 'RISO_VEO_CUTOUT_CONCEPT.PRPROJ', hook: 'VEO + NANO BANANA // RISO COLLAGE', sub: 'HALFTONE DOT MATRIX + PAPER CUTOUT MOTION', primaryColor: '#ff003c', secondaryColor: '#00ff66' }
+        ];
+
+        function initWaveformBars() {
+            const container = document.getElementById('timelineWaveformBars');
+            if (!container) return;
+            let html = '';
+            for (let i = 0; i < 48; i++) {
+                const h = 25 + Math.floor(Math.abs(Math.sin(i * 0.45)) * 75);
+                html += `<div class="flex-1 bg-terminalGreen/70 rounded-sm" style="height:${h}%"></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function setNLEScene(idx) {
+            playUISound('click');
+            nleSceneIndex = idx;
+            document.getElementById('nleActiveSeqLabel').textContent = nleScenes[idx].name;
+            [0, 1, 2].forEach(i => {
+                const btn = document.getElementById(`nleSceneBtn-${i}`);
+                if (i === idx) {
+                    btn.className = 'px-3 py-2 rounded border border-cyberYellow bg-cyberYellow/20 text-cyberYellow font-bold';
+                } else {
+                    btn.className = 'px-3 py-2 rounded border border-slate-700 bg-voidPanel text-slate-300 hover:border-neonCyan';
+                }
+            });
+        }
+
+        function toggleNLETrack(trackId) {
+            playUISound('click');
+            nleTracks[trackId] = !nleTracks[trackId];
+            const btn = document.getElementById(`trackBtn-${trackId}`);
+            const badge = document.getElementById(`statusBadge${trackId}`);
+
+            if (nleTracks[trackId]) {
+                btn.classList.remove('opacity-30');
+                badge.textContent = 'ACTIVE';
+                badge.className = 'px-2 py-0.5 bg-terminalGreen/20 text-terminalGreen border border-terminalGreen/40 rounded';
+            } else {
+                btn.classList.add('opacity-30');
+                badge.textContent = 'MUTED';
+                badge.className = 'px-2 py-0.5 bg-slate-800 text-slate-400 border border-slate-700 rounded';
+            }
+        }
+
+        function toggleNLEPlay() {
+            playUISound('click');
+            nlePlaying = !nlePlaying;
+            document.getElementById('nlePlayText').textContent = nlePlaying ? 'PAUSE' : 'PLAY';
+        }
+
+        function resetNLEPlayhead() {
+            playUISound('click');
+            nleFrame = 0;
+            document.getElementById('nleTimelineScrubber').value = 0;
+        }
+
+        function setNLESpeed(spd) {
+            playUISound('click');
+            nleSpeed = spd;
+            const map = { 0.5: 'nleSpd-05', 1: 'nleSpd-10', 2: 'nleSpd-20' };
+            Object.keys(map).forEach(k => {
+                const el = document.getElementById(map[k]);
+                if (parseFloat(k) === spd) {
+                    el.className = 'px-2 py-1 rounded bg-neonCyan/20 border border-neonCyan text-neonCyan font-bold';
+                } else {
+                    el.className = 'px-2 py-1 rounded bg-void border border-slate-700 text-slate-400';
+                }
+            });
+        }
+
+        function scrubNLE(val) {
+            nleFrame = parseInt(val, 10);
+        }
+
+        function triggerJingleChord() {
+            playUISound('jingle');
+        }
+
+        function renderNLESimulatorCanvas() {
+            const canvas = document.getElementById('nleSimulatorCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            if (canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height)) {
+                canvas.width = Math.max(320, Math.floor(rect.width));
+                canvas.height = Math.max(180, Math.floor(rect.height));
+            }
+
+            const w = canvas.width;
+            const h = canvas.height;
+            const scene = nleScenes[nleSceneIndex];
+
+            if (nlePlaying) {
+                nleFrame = (nleFrame + 0.5 * nleSpeed) % 300;
+                const scrub = document.getElementById('nleTimelineScrubber');
+                if (scrub) scrub.value = Math.floor(nleFrame);
+            }
+
+            const fInt = Math.floor(nleFrame);
+            const fCounter = document.getElementById('nleFrameCounter');
+            if (fCounter) fCounter.textContent = fInt;
+
+            const secs = String(Math.floor(fInt / 30)).padStart(2, '0');
+            const remFrames = String(fInt % 30).padStart(2, '0');
+            const tc = document.getElementById('nleTimecodeDisplay');
+            if (tc) tc.textContent = `00:00:${secs}:${remFrames}`;
+
+            const t = nleFrame * 0.05;
+
+            // Clear Canvas
+            ctx.fillStyle = '#07070c';
+            ctx.fillRect(0, 0, w, h);
+
+            // Track V1: AI Base Render Plate
+            if (nleTracks.V1) {
+                const grad = ctx.createRadialGradient(
+                    w * (0.5 + Math.sin(t * 0.5) * 0.15),
+                    h * 0.5,
+                    10,
+                    w * 0.5,
+                    h * 0.5,
+                    w * 0.65
+                );
+                grad.addColorStop(0, 'rgba(0, 240, 255, 0.22)');
+                grad.addColorStop(0.6, 'rgba(255, 0, 60, 0.12)');
+                grad.addColorStop(1, '#07070c');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+
+                // Wireframe 3D-style perspective rings
+                ctx.strokeStyle = scene.primaryColor;
+                ctx.lineWidth = 1.2;
+                for (let i = 1; i <= 3; i++) {
+                    ctx.beginPath();
+                    const radius = (i * 34) + ((nleFrame * 0.8) % 34);
+                    ctx.arc(w * 0.5, h * 0.48, radius, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
+
+            // Track V2: Paper Cutout & Risograph Halftone Overlay
+            if (nleTracks.V2) {
+                // Halftone dot grid
+                ctx.fillStyle = 'rgba(252, 238, 10, 0.22)';
+                for (let x = 16; x < w; x += 20) {
+                    for (let y = 16; y < h; y += 20) {
+                        ctx.beginPath();
+                        ctx.arc(x, y, 1.6, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                // Stop-motion paper cutout polygon frame (posterized cadence)
+                const stopMotionAngle = Math.floor(t * 2) * 0.03 * ((Math.floor(t * 2) % 2 === 0) ? 1 : -1);
+                ctx.save();
+                ctx.translate(w * 0.5, h * 0.45);
+                ctx.rotate(stopMotionAngle);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(-w * 0.31 - 4, -34 - 4, w * 0.62 + 8, 68 + 8);
+                ctx.fillStyle = '#121320';
+                ctx.fillRect(-w * 0.31, -34, w * 0.62, 68);
+                ctx.restore();
+            }
+
+            // Track V3: Kinetic Typography FX
+            if (nleTracks.V3) {
+                ctx.save();
+                ctx.translate(w * 0.5, h * 0.45);
+                const scaleBounce = 1 + Math.sin(t * 3) * 0.04;
+                ctx.scale(scaleBounce, scaleBounce);
+
+                ctx.fillStyle = scene.secondaryColor;
+                ctx.font = `900 ${Math.max(14, Math.floor(w * 0.036))}px Orbitron, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.fillText(scene.hook, 0, -2);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `600 ${Math.max(10, Math.floor(w * 0.022))}px "Share Tech Mono", monospace`;
+                ctx.fillText(scene.sub, 0, 18);
+                ctx.restore();
+            }
+
+            // Track A1: Custom Jingle Waveform Visualizer at bottom of monitor
+            if (nleTracks.A1) {
+                const barCount = 36;
+                const barWidth = (w - 40) / barCount;
+                for (let i = 0; i < barCount; i++) {
+                    const amp = Math.abs(Math.sin(i * 0.35 + t * 2.5)) * 26;
+                    ctx.fillStyle = i % 3 === 0 ? '#00ff66' : '#00f0ff';
+                    ctx.fillRect(20 + i * barWidth, h - 12 - amp, barWidth - 3, amp);
+                }
+            }
+
+            requestAnimationFrame(renderNLESimulatorCanvas);
+        }
+
+        /* ----------------------------------------------------
+           7. TRANSMIT SIGNAL // PROJECT BRIEF BUILDER
+           ---------------------------------------------------- */
+        let briefState = {
+            type: 'Commercial Video / Ad',
+            pipeline: 'PR_PRO + AE + JINGLE',
+            estWindow: '5-7 DAYS',
+            urgency: 'STANDARD_SYNC',
+            addons: []
+        };
+
+        function selectBriefType(type, pipeline, estWindow) {
+            playUISound('click');
+            briefState.type = type;
+            briefState.pipeline = pipeline;
+            briefState.estWindow = estWindow;
+
+            const buttons = document.querySelectorAll('.brief-type-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(type.split(' ')[0])) {
+                    btn.className = 'brief-type-btn p-3 rounded border border-cyberYellow bg-cyberYellow/15 text-cyberYellow font-bold text-left flex items-center justify-between';
+                } else {
+                    btn.className = 'brief-type-btn p-3 rounded border border-slate-700 bg-void text-slate-300 hover:border-neonCyan text-left flex items-center justify-between';
+                }
+            });
+            updateLiveBriefPreview();
+        }
+
+        function selectUrgency(urg) {
+            playUISound('click');
+            briefState.urgency = urg;
+            ['STANDARD_SYNC', 'PRIORITY_OVERCLOCK', 'EXPRESS_WARP_48H'].forEach(u => {
+                const btn = document.getElementById(`urg-${u}`);
+                if (u === urg) {
+                    btn.className = 'urg-btn py-2.5 px-3 rounded border border-neonCyan bg-neonCyan/15 text-neonCyan font-bold text-center';
+                } else {
+                    btn.className = 'urg-btn py-2.5 px-3 rounded border border-slate-700 bg-void text-slate-300 hover:border-cyberYellow text-center';
+                }
+            });
+            updateLiveBriefPreview();
+        }
+
+        function toggleAddon(btnEl, addonName) {
+            playUISound('click');
+            const idx = briefState.addons.indexOf(addonName);
+            if (idx > -1) {
+                briefState.addons.splice(idx, 1);
+                btnEl.className = 'addon-chip px-3 py-1.5 rounded border border-slate-700 bg-void text-slate-300 hover:border-cyberYellow transition-all';
+            } else {
+                briefState.addons.push(addonName);
+                btnEl.className = 'addon-chip px-3 py-1.5 rounded border border-electricMagenta bg-electricMagenta/20 text-electricMagenta font-bold transition-all';
+            }
+            updateLiveBriefPreview();
+        }
+
+        function generateBriefPacketText() {
+            const name = document.getElementById('clientNameInput')?.value.trim() || 'ANONYMOUS_CLIENT';
+            const contact = document.getElementById('clientContactInput')?.value.trim() || 'PENDING_UPLINK';
+            const notes = document.getElementById('clientNotesInput')?.value.trim() || 'Standard high-impact production scope.';
+            const addonsStr = briefState.addons.length > 0 ? briefState.addons.join(', ') : 'None Selected';
+
+            return `// ==========================================
+// ENCRYPTED TRANSMISSION TO: MOHIT.EXE
+// DESTINATION: DELHI_SECTOR (28.7041° N, 77.1025° E)
+// ==========================================
+[CLIENT_ID]      : ${name}
+[RETURN_UPLINK]  : ${contact}
+[MISSION_TYPE]   : ${briefState.type}
+[TECH_PIPELINE]  : ${briefState.pipeline}
+[VELOCITY_MODE]  : ${briefState.urgency} (EST: ${briefState.estWindow})
+[ADDON_MODULES]  : ${addonsStr}
+------------------------------------------
+[MISSION_BRIEF_NOTES]:
+"${notes}"
+// ==========================================`;
+        }
+
+        function updateLiveBriefPreview() {
+            const pre = document.getElementById('liveBriefTerminal');
+            if (pre) {
+                pre.textContent = generateBriefPacketText();
+            }
+        }
+
+        function copyTextFallback(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {}
+            document.body.removeChild(ta);
+        }
+
+        function showToastMessage(msg) {
+            const toast = document.getElementById('transmitToast');
+            const text = document.getElementById('transmitToastText');
+            if (toast && text) {
+                text.textContent = msg;
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 4500);
+            }
+        }
+
+        function copyBriefToClipboard() {
+            playUISound('click');
+            const packet = generateBriefPacketText();
+            copyTextFallback(packet);
+            showToastMessage('BRIEF PACKET COPIED TO CLIPBOARD // READY TO PASTE!');
+        }
+
+        function transmitSignal() {
+            playUISound('jingle');
+            const packet = generateBriefPacketText();
+            copyTextFallback(packet);
+            showToastMessage('ENCRYPTED BRIEF TRANSMITTED & COPIED TO CLIPBOARD!');
+        }
+
+        function copyContactInfo(email, event) {
+            if (event) event.preventDefault();
+            playUISound('click');
+            copyTextFallback(email);
+            showToastMessage(`DIRECT EMAIL (${email}) COPIED TO CLIPBOARD!`);
+        }
+
+        /* ----------------------------------------------------
+           8. INITIALIZATION ON WINDOW LOAD
+           ---------------------------------------------------- */
+        window.onload = function () {
+            lucide.createIcons();
+            renderProjectsGrid();
+            initWaveformBars();
+            updateLiveBriefPreview();
+
+            // Attach subtle hover SFX to interactive buttons/links
+            document.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('mouseenter', () => playUISound('hover'));
+            });
+
+            // Click on Hero Canvas toggles play/pause
+            const heroCanvas = document.getElementById('heroShowreelCanvas');
+            if (heroCanvas) {
+                heroCanvas.addEventListener('click', toggleHeroPlayback);
+            }
+
+            // Start animation loops
+            requestAnimationFrame(updateFPS);
+            requestAnimationFrame(renderHeroCanvas);
+            requestAnimationFrame(renderNLESimulatorCanvas);
+        };
+    </script>
+</body>
+</html>
